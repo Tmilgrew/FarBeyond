@@ -8,12 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		4695FD61206C682D002509F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD60206C682D002509F7 /* AppDelegate.swift */; };
-		4695FD63206C682D002509F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD62206C682D002509F7 /* ViewController.swift */; };
 		4695FD66206C682D002509F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4695FD64206C682D002509F7 /* Main.storyboard */; };
 		4695FD68206C682D002509F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4695FD67206C682D002509F7 /* Assets.xcassets */; };
 		4695FD6B206C682D002509F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4695FD69206C682D002509F7 /* LaunchScreen.storyboard */; };
 		4695FD76206C682D002509F7 /* FarBeyondTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD75206C682D002509F7 /* FarBeyondTests.swift */; };
 		4695FD81206C682D002509F7 /* FarBeyondUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD80206C682D002509F7 /* FarBeyondUITests.swift */; };
+		4695FD95206C76C4002509F7 /* CategoryTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD94206C76C4002509F7 /* CategoryTableViewDelegate.swift */; };
+		4695FD99206CE18E002509F7 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD98206CE18E002509F7 /* CategoryViewController.swift */; };
+		4695FD9C206DAFA6002509F7 /* YouTubeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD9B206DAFA6002509F7 /* YouTubeClient.swift */; };
+		4695FD9E206DAFB7002509F7 /* YouTubeConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD9D206DAFB7002509F7 /* YouTubeConstants.swift */; };
+		4695FDA0206DCBC6002509F7 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD9F206DCBC6002509F7 /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +40,6 @@
 /* Begin PBXFileReference section */
 		4695FD5D206C682D002509F7 /* FarBeyond.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FarBeyond.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4695FD60206C682D002509F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4695FD62206C682D002509F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		4695FD65206C682D002509F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4695FD67206C682D002509F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4695FD6A206C682D002509F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +50,11 @@
 		4695FD7C206C682D002509F7 /* FarBeyondUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FarBeyondUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4695FD80206C682D002509F7 /* FarBeyondUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarBeyondUITests.swift; sourceTree = "<group>"; };
 		4695FD82206C682D002509F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4695FD94206C76C4002509F7 /* CategoryTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewDelegate.swift; sourceTree = "<group>"; };
+		4695FD98206CE18E002509F7 /* CategoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
+		4695FD9B206DAFA6002509F7 /* YouTubeClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeClient.swift; sourceTree = "<group>"; };
+		4695FD9D206DAFB7002509F7 /* YouTubeConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeConstants.swift; sourceTree = "<group>"; };
+		4695FD9F206DCBC6002509F7 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,8 +105,10 @@
 		4695FD5F206C682D002509F7 /* FarBeyond */ = {
 			isa = PBXGroup;
 			children = (
+				4695FD90206C6FA6002509F7 /* Controllers */,
+				4695FD8F206C6F9B002509F7 /* View */,
+				4695FD8E206C6F8D002509F7 /* Model */,
 				4695FD60206C682D002509F7 /* AppDelegate.swift */,
-				4695FD62206C682D002509F7 /* ViewController.swift */,
 				4695FD64206C682D002509F7 /* Main.storyboard */,
 				4695FD67206C682D002509F7 /* Assets.xcassets */,
 				4695FD69206C682D002509F7 /* LaunchScreen.storyboard */,
@@ -123,6 +133,48 @@
 				4695FD82206C682D002509F7 /* Info.plist */,
 			);
 			path = FarBeyondUITests;
+			sourceTree = "<group>";
+		};
+		4695FD8E206C6F8D002509F7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4695FD9A206DAF7B002509F7 /* YouTube */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		4695FD8F206C6F9B002509F7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4695FD90206C6FA6002509F7 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				4695FD93206C7687002509F7 /* Delegates */,
+				4695FD98206CE18E002509F7 /* CategoryViewController.swift */,
+				4695FD9F206DCBC6002509F7 /* LoginViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		4695FD93206C7687002509F7 /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				4695FD94206C76C4002509F7 /* CategoryTableViewDelegate.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
+		4695FD9A206DAF7B002509F7 /* YouTube */ = {
+			isa = PBXGroup;
+			children = (
+				4695FD9B206DAFA6002509F7 /* YouTubeClient.swift */,
+				4695FD9D206DAFB7002509F7 /* YouTubeConstants.swift */,
+			);
+			path = YouTube;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,7 +311,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4695FD63206C682D002509F7 /* ViewController.swift in Sources */,
+				4695FDA0206DCBC6002509F7 /* LoginViewController.swift in Sources */,
+				4695FD9E206DAFB7002509F7 /* YouTubeConstants.swift in Sources */,
+				4695FD99206CE18E002509F7 /* CategoryViewController.swift in Sources */,
+				4695FD95206C76C4002509F7 /* CategoryTableViewDelegate.swift in Sources */,
+				4695FD9C206DAFA6002509F7 /* YouTubeClient.swift in Sources */,
 				4695FD61206C682D002509F7 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
