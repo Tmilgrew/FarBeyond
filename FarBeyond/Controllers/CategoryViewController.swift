@@ -13,6 +13,8 @@ class CategoryViewController: UIViewController, UITableViewDelegate{
     
     // MARK: - Properties
     let categoryTableViewDelegate = CategoryViewControllerDelegate()
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     
     // MARK: - Outlets
     @IBOutlet weak var categoryTableView: UITableView!
@@ -22,6 +24,13 @@ class CategoryViewController: UIViewController, UITableViewDelegate{
         categoryTableView.delegate = self.categoryTableViewDelegate
         categoryTableView.dataSource = self.categoryTableViewDelegate
         
+        
+        YouTubeClient.sharedInstance().getCategories(appDelegate.user!)
+        
         categoryTableView.reloadData()
     }
+    
+    
+    
+    
 }

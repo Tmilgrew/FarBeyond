@@ -17,18 +17,28 @@
                     <view key="view" contentMode="scaleToFill" id="pof-C1-Usl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pqu-t8-c8n" customClass="GIDSignInButton">
+                                <rect key="frame" x="109" y="292" width="156" height="83"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="IOd-om-qUG"/>
                     </view>
+                    <connections>
+                        <outlet property="signInButton" destination="pqu-t8-c8n" id="Y9d-CR-rUG"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eYf-if-g3a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-730" y="185"/>
+            <point key="canvasLocation" x="-730.39999999999998" y="184.85757121439281"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="FXt-pC-RDk">
             <objects>
-                <navigationController id="RXH-ac-VYG" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ManagerNavigationController" id="RXH-ac-VYG" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="nUW-h2-kDz">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

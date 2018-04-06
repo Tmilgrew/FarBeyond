@@ -1,0 +1,6 @@
+framework module Pods_FarBeyondTests {
+  umbrella header "Pods-FarBeyondTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
