@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import UIKit
 
 
 // MARK: - TMDBClient: NSObject
@@ -15,6 +15,9 @@ import Foundation
 class YouTubeClient : NSObject {
 
     // MARK: Properties
+    // MARK: - Properties
+    let categoryTableViewDelegate = CategoryViewControllerDelegate()
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     // shared session
     var session = URLSession.shared
@@ -23,9 +26,13 @@ class YouTubeClient : NSObject {
     //TODO: implement the configuration object below
     //var config = TMDBConfig()
     
-    func taskForGETMethod(_ method: String, _ parameters: [String:AnyObject], completionHandlerForGET: @escaping (_ result: AnyObject?, _ error: NSError) -> Void) -> URLSessionDataTask {
+    func taskForGETMethod(_ method: String, _ parameters: [String:AnyObject], completionHandlerForGET: @escaping (_ result: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
-        let request = URLRequest(url: parseURLFromParameters(parameters, withPathExtension: method))
+        var request = URLRequest(url: parseURLFromParameters(parameters, withPathExtension: method))
+        request.addValue("Bearer " + appDelegate.accessToken, forHTTPHeaderField: "Authorization")
+        
+        request.httpMethod = "GET"
+        print("Header : \(String(describing: request.allHTTPHeaderFields))")
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in
             
@@ -41,8 +48,10 @@ class YouTubeClient : NSObject {
                 return
             }
             
+            
+            
             /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode <= 200 && statusCode <= 299 else {
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
                 sendError("Your request returned a status code other than 2xx!")
                 return
             }
@@ -73,7 +82,7 @@ class YouTubeClient : NSObject {
             let queryItem = URLQueryItem(name: key, value: "\(value)")
             components.queryItems?.append(queryItem)
         }
-        print("\(components.url)")
+        //print("\(components.url)")
         return components.url!
     }
 
@@ -89,7 +98,7 @@ class YouTubeClient : NSObject {
             let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
             completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
         }
-        
+        print("\(parsedResult)")
         completionHandlerForConvertData(parsedResult, nil)
     }
     
