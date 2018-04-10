@@ -26,7 +26,31 @@ extension YouTubeClient {
         print("\(method)")
         _ = taskForGETMethod(method, parameters as [String: AnyObject]) { (results, error) in
             
-            print ("\(error)")
+            func sendError(_ error:NSError){
+                // TODO: Send error to completion handler (completion handler not built yet at time of this note)
+            }
+            
+            guard error == nil else {
+                sendError(error!)
+                return
+            }
+            
+            guard let categoryItems = results?[JSONBodyResponse.categoryItems] as? [AnyObject] else {
+                // TODO: What happens if this fails?
+                return
+            }
+            
+            print("\(categoryItems)")
+            var categoryArray = [String]()
+            
+            for item in categoryItems {
+                let snippet = item[JSONBodyResponse.snippet] as? AnyObject
+                let categoryString = snippet![JSONBodyResponse.title] as! String
+                categoryArray.append(categoryString)
+            }
+            print("\(categoryArray)")
+            
+            //print ("\(String(describing: results))")
         }
         
     }

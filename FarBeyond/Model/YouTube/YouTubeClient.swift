@@ -62,7 +62,7 @@ class YouTubeClient : NSObject {
                 return
             }
             
-            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET as! (AnyObject?, NSError?) -> Void)
+            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET )
             
             //print("\(String(describing: data))")
         }
@@ -98,7 +98,7 @@ class YouTubeClient : NSObject {
             let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
             completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
         }
-        print("\(parsedResult)")
+        //print("\(parsedResult)")
         completionHandlerForConvertData(parsedResult, nil)
     }
     

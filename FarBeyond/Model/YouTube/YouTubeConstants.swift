@@ -40,5 +40,12 @@ extension YouTubeClient {
         static var USRegionCode = "us"
     }
     
+    // MARK: JSON Body Response Constants
+    struct JSONBodyResponse {
+        static var categoryItems = "items"
+        static var snippet = "snippet"
+        static var title = "title"
+    }
+    
 
 }

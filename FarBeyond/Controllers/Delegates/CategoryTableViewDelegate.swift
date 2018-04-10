@@ -21,7 +21,7 @@ class CategoryViewControllerDelegate: UITableView, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "CategoryTableViewCell"
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell!
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier)
         
         // TODO: Make it so that each cell shows a unique cateogory
         cell?.textLabel?.text = "Category"
