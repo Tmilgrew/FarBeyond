@@ -69,7 +69,10 @@ class LoginViewController : UIViewController, GIDSignInDelegate, GIDSignInUIDele
             
             appDelegate.accessToken = GIDSignIn.sharedInstance().currentUser.authentication.accessToken
             
-            YouTubeClient.sharedInstance().getCategories(appDelegate.user!)
+            let controller = storyboard!.instantiateViewController(withIdentifier: "ManagerNavigationController")
+            present(controller, animated: true, completion: nil)
+            
+            
             // ...
         }
     }
@@ -79,5 +82,7 @@ class LoginViewController : UIViewController, GIDSignInDelegate, GIDSignInUIDele
         // Perform any operations when the user disconnects from app here.
         // ...
     }
+    
+    
 }
 

@@ -16,7 +16,7 @@ class YouTubeClient : NSObject {
 
     // MARK: Properties
     // MARK: - Properties
-    let categoryTableViewDelegate = CategoryViewControllerDelegate()
+    //-let categoryTableViewDelegate = CategoryViewControllerDelegate()
     var appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     // shared session
@@ -32,7 +32,7 @@ class YouTubeClient : NSObject {
         request.addValue("Bearer " + appDelegate.accessToken, forHTTPHeaderField: "Authorization")
         
         request.httpMethod = "GET"
-        print("Header : \(String(describing: request.allHTTPHeaderFields))")
+        print("Header : \(String(describing: request/*.allHTTPHeaderFields*/))")
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in
             
@@ -52,7 +52,7 @@ class YouTubeClient : NSObject {
             
             /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
-                sendError("Your request returned a status code other than 2xx!")
+                sendError("Your request returned a status code other than 2xx! -----\(String(describing: (response as? HTTPURLResponse)?.statusCode))")
                 return
             }
             

@@ -23,28 +23,34 @@ extension YouTubeClient {
     
     // MARK: Methods
     struct Methods{
-        static let guideCategories = "/guideCategories"
+        static let GuideCategories = "/guideCategories"
+        static let Channels = "/channels"
     
     }
     
     // MARK: Youtube guideCategories Parameter Keys
     struct ParameterKeys{
-        static var AccessToken = "access_token"
-        static var Part = "part"
-        static var RegionCode = "regionCode"
+        static let AccessToken = "access_token"
+        static let Part = "part"
+        static let RegionCode = "regionCode"
+        static let CategoryId = "categoryId"
     }
     
     // MARK: Youtube guideCategories Parameter Values
     struct ParameterValues{
-        static var Snippet = "snippet"
-        static var USRegionCode = "us"
+        static let Snippet = "snippet"
+        static let USRegionCode = "us"
     }
     
     // MARK: JSON Body Response Constants
     struct JSONBodyResponse {
-        static var categoryItems = "items"
-        static var snippet = "snippet"
-        static var title = "title"
+        static let CategoryItems = "items"
+        static let Snippet = "snippet"
+        static let Title = "title"
+        static let CategoryId = "id"
+        static let Description = "description"
+        static let Default = "default"
+        static let URL = "url"
     }
     
 

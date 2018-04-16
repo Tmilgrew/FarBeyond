@@ -15,19 +15,19 @@ import UIKit
 
 extension YouTubeClient {
     
-    func getCategories(_ user : User){
-        // TODO: add api Key!!!!!!
+    func getCategories(_ user : User, completionHandlerForGetCategories: @escaping (_ results:[Category]?, _ error: NSError?) -> Void){
+        
         let parameters = [
             YouTubeClient.ParameterKeys.Part:YouTubeClient.ParameterValues.Snippet,
-            YouTubeClient.ParameterKeys.RegionCode:YouTubeClient.ParameterValues.USRegionCode//,
-            //YouTubeClient.ParameterKeys.AccessToken: user.idToken
+            YouTubeClient.ParameterKeys.RegionCode:YouTubeClient.ParameterValues.USRegionCode
         ]
-        let method = YouTubeClient.Methods.guideCategories
+        let method = YouTubeClient.Methods.GuideCategories
         print("\(method)")
         _ = taskForGETMethod(method, parameters as [String: AnyObject]) { (results, error) in
             
             func sendError(_ error:NSError){
                 // TODO: Send error to completion handler (completion handler not built yet at time of this note)
+                completionHandlerForGetCategories(nil, error)
             }
             
             guard error == nil else {
@@ -35,23 +35,72 @@ extension YouTubeClient {
                 return
             }
             
-            guard let categoryItems = results?[JSONBodyResponse.categoryItems] as? [AnyObject] else {
+            guard let categoryItems = results?[JSONBodyResponse.CategoryItems] as? [AnyObject] else {
                 // TODO: What happens if this fails?
                 return
             }
             
-            print("\(categoryItems)")
-            var categoryArray = [String]()
+           // print("\(categoryItems)")
+            var categoryArray = [Category]()
+            var editorCategory = Category()
+            editorCategory.id = "007"
+            editorCategory.name = "Editor's Pick"
+            categoryArray.append(editorCategory)
             
             for item in categoryItems {
-                let snippet = item[JSONBodyResponse.snippet] as? AnyObject
-                let categoryString = snippet![JSONBodyResponse.title] as! String
-                categoryArray.append(categoryString)
+                var category = Category()
+                category.id = item[JSONBodyResponse.CategoryId] as! String
+                if let snippet = item[JSONBodyResponse.Snippet] as? [String:AnyObject] {
+                    category.name = snippet[JSONBodyResponse.Title] as! String
+                    categoryArray.append(category)
+                }
             }
-            print("\(categoryArray)")
             
+            completionHandlerForGetCategories(categoryArray, nil)
             //print ("\(String(describing: results))")
         }
         
+    }
+    
+    func getChannelsFromCategory(_ user: User, _ category: String, completionHandlerForGetChannelsFromCategory: @escaping (_ results:[Channel]?, _ error: NSError?) -> Void){
+        
+        let parameters = [
+            YouTubeClient.ParameterKeys.Part : YouTubeClient.ParameterValues.Snippet,
+            YouTubeClient.ParameterKeys.CategoryId : category
+        ]
+        
+        let method = YouTubeClient.Methods.Channels
+        
+        _ = taskForGETMethod(method, parameters as [String: AnyObject]) { (results, error) in
+            
+            func sendError(_ error: NSError){
+                completionHandlerForGetChannelsFromCategory(nil, error)
+            }
+            
+            guard error == nil else {
+                sendError(error!)
+                return
+            }
+            
+            guard let channels = results?[YouTubeClient.JSONBodyResponse.CategoryItems] as? [AnyObject] else {
+                // TODO: What happens if this fails?
+                return
+            }
+            var channelArray = [Channel]()
+            for channel in channels {
+                var customChannel = Channel()
+                customChannel.id = channel[YouTubeClient.JSONBodyResponse.CategoryId] as? String
+                customChannel.title = channel[YouTubeClient.JSONBodyResponse.Title] as? String
+                customChannel.description = channel[YouTubeClient.JSONBodyResponse.Description] as? String
+                
+                let thumbnailSnippet = channel[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject]
+                let defaultThumbnail = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Default] as? [String:AnyObject]
+                let defaultThumbnailUrl = defaultThumbnail?[YouTubeClient.JSONBodyResponse.URL] as? String
+                customChannel.thumbnail = defaultThumbnailUrl
+                channelArray.append(customChannel)
+            }
+            completionHandlerForGetChannelsFromCategory(channelArray, nil)
+            //print("\(String(describing: channels))")
+        }
     }
 }
