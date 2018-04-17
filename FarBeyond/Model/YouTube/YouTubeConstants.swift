@@ -34,12 +34,14 @@ extension YouTubeClient {
         static let Part = "part"
         static let RegionCode = "regionCode"
         static let CategoryId = "categoryId"
+        static let MaxResults = "maxResults"
     }
     
     // MARK: Youtube guideCategories Parameter Values
     struct ParameterValues{
         static let Snippet = "snippet"
         static let USRegionCode = "us"
+        static let Twentyfive = "25"
     }
     
     // MARK: JSON Body Response Constants
@@ -51,6 +53,7 @@ extension YouTubeClient {
         static let Description = "description"
         static let Default = "default"
         static let URL = "url"
+        static let Thumbnails = "thumbnails"
     }
     
 

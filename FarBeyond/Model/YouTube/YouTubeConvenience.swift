@@ -66,6 +66,7 @@ extension YouTubeClient {
         
         let parameters = [
             YouTubeClient.ParameterKeys.Part : YouTubeClient.ParameterValues.Snippet,
+            YouTubeClient.ParameterKeys.MaxResults : YouTubeClient.ParameterValues.Twentyfive,
             YouTubeClient.ParameterKeys.CategoryId : category
         ]
         
@@ -90,15 +91,22 @@ extension YouTubeClient {
             for channel in channels {
                 var customChannel = Channel()
                 customChannel.id = channel[YouTubeClient.JSONBodyResponse.CategoryId] as? String
-                customChannel.title = channel[YouTubeClient.JSONBodyResponse.Title] as? String
-                customChannel.description = channel[YouTubeClient.JSONBodyResponse.Description] as? String
+                
+                
                 
                 let thumbnailSnippet = channel[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject]
-                let defaultThumbnail = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Default] as? [String:AnyObject]
-                let defaultThumbnailUrl = defaultThumbnail?[YouTubeClient.JSONBodyResponse.URL] as? String
-                customChannel.thumbnail = defaultThumbnailUrl
+                customChannel.title = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Title] as? String
+                customChannel.description = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Description] as? String
+                
+                let allThumbnails = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String:AnyObject]
+                let defaultThumbnail = allThumbnails?[YouTubeClient.JSONBodyResponse.Default] as? [String:AnyObject]
+                let defaultURL = defaultThumbnail?[YouTubeClient.JSONBodyResponse.URL] as? String
+                //print("\(defaultURL)")
+                //print("\(defaultURL)")
+                customChannel.thumbnail = defaultURL
                 channelArray.append(customChannel)
             }
+            //print("\(channels)")
             completionHandlerForGetChannelsFromCategory(channelArray, nil)
             //print("\(String(describing: channels))")
         }

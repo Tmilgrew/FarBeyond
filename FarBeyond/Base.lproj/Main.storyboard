@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -77,9 +78,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ywz-yF-jb1">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ywz-yF-jb1">
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CategoryTableViewCell" textLabel="jXD-7G-Lq3" style="IBUITableViewCellStyleDefault" id="0MK-XV-ONE">
@@ -99,13 +99,19 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="z3p-vS-MoV" kind="show" id="VOl-aC-yC7"/>
+                                            <segue destination="z3p-vS-MoV" kind="show" identifier="pushToChannels" id="VOl-aC-yC7"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="ywz-yF-jb1" firstAttribute="leading" secondItem="ao6-zC-p5r" secondAttribute="leading" id="6M9-3C-Xf0"/>
+                            <constraint firstItem="ywz-yF-jb1" firstAttribute="top" secondItem="ao6-zC-p5r" secondAttribute="top" id="AmA-xX-GgA"/>
+                            <constraint firstItem="ao6-zC-p5r" firstAttribute="trailing" secondItem="ywz-yF-jb1" secondAttribute="trailing" id="yRQ-1g-Bca"/>
+                            <constraint firstItem="ao6-zC-p5r" firstAttribute="bottom" secondItem="ywz-yF-jb1" secondAttribute="bottom" id="zix-IV-X2f"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="ao6-zC-p5r"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="0bo-Ht-ERD"/>
@@ -125,9 +131,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6jU-1F-OhH">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6jU-1F-OhH">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChannelTableViewCell" textLabel="OoO-EF-daW" detailTextLabel="deu-2a-4iC" style="IBUITableViewCellStyleSubtitle" id="E0u-4e-rqh">
@@ -158,6 +163,12 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottomMargin" secondItem="6jU-1F-OhH" secondAttribute="bottom" id="0hA-c6-r3b"/>
+                            <constraint firstItem="6jU-1F-OhH" firstAttribute="top" secondItem="R8h-Gj-Yc6" secondAttribute="top" id="L79-P2-urN"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="6jU-1F-OhH" secondAttribute="trailing" constant="-16" id="OCQ-h1-ZE1"/>
+                            <constraint firstItem="6jU-1F-OhH" firstAttribute="leading" secondItem="X3y-JG-aaA" secondAttribute="leadingMargin" constant="-16" id="peV-Bl-ejV"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="R8h-Gj-Yc6"/>
                     </view>
                     <connections>

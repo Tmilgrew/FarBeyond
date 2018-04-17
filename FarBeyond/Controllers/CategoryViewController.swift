@@ -45,6 +45,13 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "pushToChannels"{
+            let controller = segue.destination as! CategoryChannelViewController
+            controller.category = appDelegate.category?[(categoryTableView.indexPathForSelectedRow! as NSIndexPath).row].id
+        }
+    }
 }
 
 // MARK:  TableView Delegate Methods
@@ -65,9 +72,10 @@ extension CategoryViewController {
         return cell!
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = storyboard!.instantiateViewController(withIdentifier: "CategoryChannelsViewController") as! CategoryChannelViewController
-        controller.category = appDelegate.category?[(indexPath as NSIndexPath).row].id
-        present(controller, animated: false, completion: nil)
-    }
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let controller = storyboard!.instantiateViewController(withIdentifier: "CategoryChannelsViewController") as! CategoryChannelViewController
+//        //controller.category = appDelegate.category?[(indexPath as NSIndexPath).row].id
+//        prepare(for: <#T##UIStoryboardSegue#>, sender: <#T##Any?#>)
+//        present(controller, animated: false, completion: nil)
+//    }
 }

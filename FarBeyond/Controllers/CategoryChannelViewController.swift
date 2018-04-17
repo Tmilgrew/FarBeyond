@@ -39,7 +39,7 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
             }
             
             self.appDelegate.channelsFromCategory = results
-            print("\(self.appDelegate.channelsFromCategory)")
+            //print("-----The results are: \(String(describing: results))")
             performUIUpdatesOnMain {
                 self.channelTableView.reloadData()
             }
@@ -63,8 +63,23 @@ extension CategoryChannelViewController {
         cell?.textLabel?.text = appDelegate.channelsFromCategory?[(indexPath as NSIndexPath).row].title
         cell?.detailTextLabel?.text = appDelegate.channelsFromCategory?[(indexPath as NSIndexPath).row].description
         
+        getDataFromUrl(url: URL(string: (appDelegate.channelsFromCategory?[(indexPath as NSIndexPath).row].thumbnail)!)!) { (data, response, error) in
+            guard let data = data, error == nil else{
+                return
+            }
+            performUIUpdatesOnMain {
+                cell?.imageView?.image = UIImage(data: data)
+                self.channelTableView.reloadData()
+            }
+        }
         
         return cell!
+    }
+    
+    func getDataFromUrl(url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            completion(data, response, error)
+            }.resume()
     }
     
 //    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
