@@ -8,48 +8,135 @@
 
 import Foundation
 import UIKit
+import CoreData
 
-class CategoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
+class CategoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
 
+    //@IBOutlet weak var tableView: UITableView!
     
     // MARK: - Properties
     //let categoryTableViewDelegate = CategoryViewControllerDelegate()
     var appDelegate = UIApplication.shared.delegate as! AppDelegate
     //var categoryStrings : [String]?
-    var categoryStrings = [String]()
+    //var categoryStrings = [String]()
+    var categories: [Category] = []
+    var dataController: DataController!
+//    var fetchedResultsController:NSFetchedResultsController<Category>!
+    
+//    fileprivate func setupFetchedResultsController(){
+//        let fetchRequest:NSFetchRequest<Category> = Category.fetchRequest()
+//        let sortDescriptor = NSSortDescriptor(key: "id", ascending: true)
+//        fetchRequest.sortDescriptors = [sortDescriptor]
+//        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+//
+//        fetchedResultsController.delegate = self
+//        do {
+//            try fetchedResultsController.performFetch()
+//        } catch {
+//            fatalError("The fetch could not be performed: \(error.localizedDescription)")
+//        }
+//    }
+    
     
     
     // MARK: - Outlets
     @IBOutlet weak var categoryTableView: UITableView!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        categoryTableView.delegate = self
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Inject the dataController into all viewControllers in the MainTabBarController
+        //*************************************************************************************
+        if let tab = appDelegate.window?.rootViewController as? MainTabBarController {
+            for child in (tab.viewControllers as? [UINavigationController]) ?? []
+            {
+                let firstViewController = child.viewControllers.first
+                if let top = firstViewController as? CoreDataClient {
+                    top.setStack(stack: appDelegate.dataController)
+                }
+            }
+        }
+        print("---------------- Here is the Data Controller: \(dataController)")
+        // Setup the Fetched Results Controller
+        //**************************************************************************************
+        //setupFetchedResultsController()
         categoryTableView.dataSource = self
+        callGetCategories()
+        
+        //categoryTableView.delegate = self
+        
+        // If there are zero objects for Category then get the categories
+        //***************************************************************************************
         
         
+            //print("\(categories)")
+        
+        
+        
+//        let fetchRequest : NSFetchRequest<Category> = Category.fetchRequest()
+//
+//        if let result = try? dataController.viewContext.fetch(fetchRequest) {
+//            categories = result
+//            categoryTableView.reloadData()
+//        }
+        
+        
+    }
+    
+    func callGetCategories(){
         YouTubeClient.sharedInstance().getCategories(appDelegate.user!){(results, error) in
             
             guard error == nil else {
                 // TODO: Take the error and display and error message on the screen
                 return
             }
+            //var categoryArray = [Category]()
+//            var editorCategory = [String]()
+//            editorCategory.append("007")
+//            editorCategory.append("Editor's Pick")
+//            self.addCategory(editorCategory)
             
-            self.appDelegate.category = results
-            for category in self.appDelegate.category! {
-                self.categoryStrings.append(category.name)
+            for item in results! {
+                let category = Category(context: self.dataController.viewContext)
+                category.id = item[YouTubeClient.JSONBodyResponse.CategoryId] as? String
+                
+                if let snippet = item[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] {
+                    category.name = snippet[YouTubeClient.JSONBodyResponse.Title] as? String
+                }
+                print("------------- This is category before saving:  \(category)")
+                try? self.dataController.viewContext.save()
+                print ("------------ This is context after saving: \(self.dataController.viewContext)")
             }
-            //self.categoryTableViewDelegate.categoryStrings = results!
+            
+            let fetchRequest : NSFetchRequest<Category> = Category.fetchRequest()
+            let sortDescriptor = NSSortDescriptor(key: "id", ascending: true)
+            fetchRequest.sortDescriptors = [sortDescriptor]
+            if let result = try? self.dataController.viewContext.fetch(fetchRequest){
+                self.categories = result
+            }
+            
+            //print("\(String(describing: self.fetchedResultsController.fetchedObjects))")
             performUIUpdatesOnMain {
                 self.categoryTableView.reloadData()
             }
         }
     }
     
+//    func addCategory(_ nameAndID : [String]){
+//        let category = Category(context: dataController.viewContext)
+//        category.id = nameAndID[0]
+//        category.name = nameAndID[1]
+//        try? dataController.viewContext.save()
+//        print("\(category)")
+//    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "pushToChannels"{
-            let controller = segue.destination as! CategoryChannelViewController
-            controller.category = appDelegate.category?[(categoryTableView.indexPathForSelectedRow! as NSIndexPath).row].id
+            if let controller = segue.destination as? CategoryChannelViewController {
+                controller.category = categories[(categoryTableView.indexPathForSelectedRow! as NSIndexPath).row].id
+                controller.dataController = self.dataController
+            }
         }
     }
 }
@@ -59,23 +146,66 @@ extension CategoryViewController {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // TODO: Configure the number of rows based on number of categories
-        return appDelegate.category?.count ?? 0
+//        print("The number of objects is \(String(describing: fetchedResultsController.sections?.count))")
+//        return fetchedResultsController.sections?.count ?? 1
+        return categories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //let aCategory = fetchedResultsController.object(at: indexPath)
+        let aCategory = categories[(indexPath as NSIndexPath).row]
         let cellReuseIdentifier = "CategoryTableViewCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier)
         
         // TODO: Decorate the cell
-        cell?.textLabel?.text = appDelegate.category?[(indexPath as NSIndexPath).row].name
+        cell?.textLabel?.text = aCategory.name
         
         return cell!
     }
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let controller = storyboard!.instantiateViewController(withIdentifier: "CategoryChannelsViewController") as! CategoryChannelViewController
-//        //controller.category = appDelegate.category?[(indexPath as NSIndexPath).row].id
-//        prepare(for: <#T##UIStoryboardSegue#>, sender: <#T##Any?#>)
-//        present(controller, animated: false, completion: nil)
-//    }
+
 }
+
+extension CategoryViewController : CoreDataClient {
+    func setStack(stack: DataController) {
+        self.dataController = stack
+    }
+}
+//extension CategoryViewController:NSFetchedResultsControllerDelegate {
+//
+//    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+//        switch type {
+//        case .insert:
+//            categoryTableView.insertRows(at: [newIndexPath!], with: .fade)
+//            break
+//        case .delete:
+//            categoryTableView.deleteRows(at: [indexPath!], with: .fade)
+//            break
+//        case .update:
+//            categoryTableView.reloadRows(at: [indexPath!], with: .fade)
+//        case .move:
+//            categoryTableView.moveRow(at: indexPath!, to: newIndexPath!)
+//        }
+//    }
+//
+//    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+//        let indexSet = IndexSet(integer: sectionIndex)
+//        switch type {
+//        case .insert: categoryTableView.insertSections(indexSet, with: .fade)
+//        case .delete: categoryTableView.deleteSections(indexSet, with: .fade)
+//        case .update, .move:
+//            fatalError("Invalid change type in controller(_:didChange:atSectionIndex:for:). Only .insert or .delete should be possible.")
+//        }
+//    }
+//
+//
+//    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//        categoryTableView.beginUpdates()
+//    }
+//
+//    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//        categoryTableView.endUpdates()
+//    }
+//
+//}
+

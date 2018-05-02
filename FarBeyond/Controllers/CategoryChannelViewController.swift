@@ -14,6 +14,8 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
     // MARK: Properties
     var category : String!
     var appDelegate = UIApplication.shared.delegate as! AppDelegate
+    var channelsFromCategory: [Channel]?
+    var dataController: DataController!
     
     // MARK: Outlets
     @IBOutlet weak var channelTableView: UITableView!
@@ -38,7 +40,27 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
                 return
             }
             
-            self.appDelegate.channelsFromCategory = results
+            var channelArray = [Channel]()
+            for channel in results! {
+                let customChannel = Channel(context: self.dataController.viewContext)
+                customChannel.channelID = channel[YouTubeClient.JSONBodyResponse.CategoryId] as? String
+                
+                
+                
+                let thumbnailSnippet = channel[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject]
+                customChannel.channelTitle = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Title] as? String
+                customChannel.channelDescription = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Description] as? String
+                
+                let allThumbnails = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String:AnyObject]
+                let defaultThumbnail = allThumbnails?[YouTubeClient.JSONBodyResponse.Default] as? [String:AnyObject]
+                let defaultURL = defaultThumbnail?[YouTubeClient.JSONBodyResponse.URL] as? String
+                //print("\(defaultURL)")
+                //print("\(defaultURL)")
+                customChannel.channelThumbnailURL = defaultURL
+                channelArray.append(customChannel)
+            }
+            
+            self.channelsFromCategory = channelArray
             //print("-----The results are: \(String(describing: results))")
             performUIUpdatesOnMain {
                 self.channelTableView.reloadData()
@@ -52,7 +74,7 @@ extension CategoryChannelViewController {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // TODO: Configure the number of rows based on number of categories
-        return appDelegate.channelsFromCategory?.count ?? 0
+        return channelsFromCategory?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -60,10 +82,10 @@ extension CategoryChannelViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier)
         
         // TODO: Decorate the cell
-        cell?.textLabel?.text = appDelegate.channelsFromCategory?[(indexPath as NSIndexPath).row].title
-        cell?.detailTextLabel?.text = appDelegate.channelsFromCategory?[(indexPath as NSIndexPath).row].description
+        cell?.textLabel?.text = channelsFromCategory?[(indexPath as NSIndexPath).row].channelTitle
+        cell?.detailTextLabel?.text = channelsFromCategory?[(indexPath as NSIndexPath).row].description
         
-        getDataFromUrl(url: URL(string: (appDelegate.channelsFromCategory?[(indexPath as NSIndexPath).row].thumbnail)!)!) { (data, response, error) in
+        getDataFromUrl(url: URL(string: (channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailURL)!)!) { (data, response, error) in
             guard let data = data, error == nil else{
                 return
             }

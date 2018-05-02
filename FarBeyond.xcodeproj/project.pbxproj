@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		1462F1B09AC77ED4AC700B0C /* Pods_FarBeyond.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF2183A49E4E89277571902 /* Pods_FarBeyond.framework */; };
 		4670848D2080499400484AD6 /* CategoryChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4670848C2080499400484AD6 /* CategoryChannelViewController.swift */; };
-		4670848F2084024A00484AD6 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4670848E2084024A00484AD6 /* Category.swift */; };
-		4670849120842D3E00484AD6 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4670849020842D3E00484AD6 /* Channel.swift */; };
 		4695FD61206C682D002509F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD60206C682D002509F7 /* AppDelegate.swift */; };
 		4695FD66206C682D002509F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4695FD64206C682D002509F7 /* Main.storyboard */; };
 		4695FD68206C682D002509F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4695FD67206C682D002509F7 /* Assets.xcassets */; };
@@ -24,6 +22,11 @@
 		4695FDA0206DCBC6002509F7 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD9F206DCBC6002509F7 /* LoginViewController.swift */; };
 		4695FDA2207069E7002509F7 /* YouTubeConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FDA1207069E7002509F7 /* YouTubeConvenience.swift */; };
 		46AF1145207DA4D4003DEDF0 /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AF1144207DA4D4003DEDF0 /* GCDBlackBox.swift */; };
+		46C71A1D2086E1C200DB5374 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 46C71A1B2086E1C200DB5374 /* Model.xcdatamodeld */; };
+		46C71A1F2088272900DB5374 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C71A1E2088272900DB5374 /* DataController.swift */; };
+		46C71A212088324900DB5374 /* Category+Extra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C71A202088324900DB5374 /* Category+Extra.swift */; };
+		46DE4BDD20916FBB0010BE06 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DE4BDC20916FBB0010BE06 /* MainTabBarController.swift */; };
+		46DE4BDF209427CC0010BE06 /* CoreDataClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DE4BDE209427CC0010BE06 /* CoreDataClient.swift */; };
 		46E6864C207303ED002DA8B5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E6864B207303ED002DA8B5 /* User.swift */; };
 		93717D8FDC8184C4C3F8A609 /* Pods_FarBeyondTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB6F1B6368A980330D4AC3D8 /* Pods_FarBeyondTests.framework */; };
 		D4241770E12679FEA06C289D /* Pods_FarBeyondUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DA7A17222E4A16525C06040 /* Pods_FarBeyondUITests.framework */; };
@@ -52,8 +55,6 @@
 		201D320CFC0DF1BA9DF23EF2 /* Pods-FarBeyond.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyond.release.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyond/Pods-FarBeyond.release.xcconfig"; sourceTree = "<group>"; };
 		3FA9377AE98257D9FF83A237 /* Pods-FarBeyondUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyondUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyondUITests/Pods-FarBeyondUITests.release.xcconfig"; sourceTree = "<group>"; };
 		4670848C2080499400484AD6 /* CategoryChannelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryChannelViewController.swift; sourceTree = "<group>"; };
-		4670848E2084024A00484AD6 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
-		4670849020842D3E00484AD6 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		4695FD5D206C682D002509F7 /* FarBeyond.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FarBeyond.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4695FD60206C682D002509F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4695FD65206C682D002509F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -73,6 +74,11 @@
 		4695FD9F206DCBC6002509F7 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		4695FDA1207069E7002509F7 /* YouTubeConvenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeConvenience.swift; sourceTree = "<group>"; };
 		46AF1144207DA4D4003DEDF0 /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
+		46C71A1C2086E1C200DB5374 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		46C71A1E2088272900DB5374 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		46C71A202088324900DB5374 /* Category+Extra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Category+Extra.swift"; sourceTree = "<group>"; };
+		46DE4BDC20916FBB0010BE06 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		46DE4BDE209427CC0010BE06 /* CoreDataClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataClient.swift; sourceTree = "<group>"; };
 		46E6864B207303ED002DA8B5 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		576B57DEE4B7CAB15AC3411A /* Pods-FarBeyondUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyondUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyondUITests/Pods-FarBeyondUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		8AF2183A49E4E89277571902 /* Pods_FarBeyond.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FarBeyond.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -180,8 +186,9 @@
 			children = (
 				4695FD9A206DAF7B002509F7 /* YouTube */,
 				46E6864B207303ED002DA8B5 /* User.swift */,
-				4670848E2084024A00484AD6 /* Category.swift */,
-				4670849020842D3E00484AD6 /* Channel.swift */,
+				46C71A1B2086E1C200DB5374 /* Model.xcdatamodeld */,
+				46C71A1E2088272900DB5374 /* DataController.swift */,
+				46C71A202088324900DB5374 /* Category+Extra.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -200,6 +207,8 @@
 				4695FD9F206DCBC6002509F7 /* LoginViewController.swift */,
 				4695FD98206CE18E002509F7 /* CategoryViewController.swift */,
 				4670848C2080499400484AD6 /* CategoryChannelViewController.swift */,
+				46DE4BDC20916FBB0010BE06 /* MainTabBarController.swift */,
+				46DE4BDE209427CC0010BE06 /* CoreDataClient.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -536,17 +545,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				4695FDA0206DCBC6002509F7 /* LoginViewController.swift in Sources */,
-				4670849120842D3E00484AD6 /* Channel.swift in Sources */,
+				46DE4BDF209427CC0010BE06 /* CoreDataClient.swift in Sources */,
 				4695FD9E206DAFB7002509F7 /* YouTubeConstants.swift in Sources */,
+				46DE4BDD20916FBB0010BE06 /* MainTabBarController.swift in Sources */,
 				4670848D2080499400484AD6 /* CategoryChannelViewController.swift in Sources */,
 				4695FD99206CE18E002509F7 /* CategoryViewController.swift in Sources */,
 				4695FD95206C76C4002509F7 /* CategoryTableViewDelegate.swift in Sources */,
 				46E6864C207303ED002DA8B5 /* User.swift in Sources */,
+				46C71A212088324900DB5374 /* Category+Extra.swift in Sources */,
+				46C71A1F2088272900DB5374 /* DataController.swift in Sources */,
 				4695FDA2207069E7002509F7 /* YouTubeConvenience.swift in Sources */,
 				4695FD9C206DAFA6002509F7 /* YouTubeClient.swift in Sources */,
 				46AF1145207DA4D4003DEDF0 /* GCDBlackBox.swift in Sources */,
 				4695FD61206C682D002509F7 /* AppDelegate.swift in Sources */,
-				4670848F2084024A00484AD6 /* Category.swift in Sources */,
+				46C71A1D2086E1C200DB5374 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -850,6 +862,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		46C71A1B2086E1C200DB5374 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				46C71A1C2086E1C200DB5374 /* Model.xcdatamodel */,
+			);
+			currentVersion = 46C71A1C2086E1C200DB5374 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 4695FD55206C682D002509F7 /* Project object */;
 }

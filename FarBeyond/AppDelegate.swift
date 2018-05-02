@@ -14,16 +14,59 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var user: User!
-    var category: [Category]?
-    var channelsFromCategory: [Channel]?
+//    var category: [Category]?
+//    var channelsFromCategory: [Channel]?
     var accessToken : String!
+    let dataController = DataController(modelName: "Model")
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-//        GIDSignIn.sharedInstance().clientID = "352399262689-3a1vbjcaushnsvt10hkrr4tdai5129lc.apps.googleusercontent.com"
-//        GIDSignIn.sharedInstance().scopes = [
-//            "https://www.googleapis.com/auth/youtube"
-//        ]
-//        GIDSignIn.sharedInstance().delegate = self
+        dataController.load()
+        
+        // If the the 'authenticated' value is set up in UserDefaults continue forward,
+        // otherwise go to else statement
+        //******************************************************************************************
+        if let authenticatedUser = UserDefaults.standard.value(forKey: "authenticated") {
+            
+            // The value for 'authenticated' has been set before.  Is the value false?
+            // The user is then not signed in.  Execute the following block of code
+            //**************************************************************************************
+            if authenticatedUser as! Bool == false {
+                let rootController = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "LoginViewController")
+                self.window?.rootViewController = rootController
+                
+            } else {
+                if let tab = window?.rootViewController as? MainTabBarController {
+                    for child in (tab.viewControllers as? [UINavigationController]) ?? [] {
+                        let firstViewController = child.viewControllers.first
+                        if let top = firstViewController as? CoreDataClient {
+                            top.setStack(stack: dataController)
+                        }
+                    }
+                }
+            }
+        // The 'authenticated' valuse has not been set up.
+        // This block sets the initial value for 'authenticated' in UserDefaults.
+        // After we set the value, we make the rootViewController the LoginViewController
+        //*******************************************************************************************
+        } else {
+            UserDefaults.standard.setValue(false, forKey: "authenticated")
+            
+            let rootController = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "LoginViewController")
+            self.window?.rootViewController = rootController
+            print("This is the first time launching the app!")
+        }
+        
+        //dataController.load()
+//        let rootViewController = window?.rootViewController as? MainTabBarController
+//        rootViewController?.dataController = dataController
+//        if let tab = window?.rootViewController as? MainTabBarController {
+//            for child in tab.viewControllers ?? [] {
+//                if let top = child as? CoreDataClient {
+//                    top.setStack(stack: dataController)
+//                }
+//            }
+//        }
+        
         return true
     }
 
@@ -47,6 +90,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        UserDefaults.standard.setValue(false, forKey: "authenticated")
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
@@ -63,35 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     
-//    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
-//              withError error: Error!) {
-//        if let error = error {
-//            print("\(error.localizedDescription)")
-//        } else {
-//            // Perform any operations on signed in user here.
-//            let userId = user.userID                  // For client-side use only!
-//            let idToken = user.authentication.idToken // Safe to send to the server
-//            let fullName = user.profile.name
-//            let givenName = user.profile.givenName
-//            let familyName = user.profile.familyName
-//            let email = user.profile.email
-//
-//            let properties = [userId, idToken, fullName, givenName, familyName, email]
-//            self.user = User(properties as! [String])
-//            print("\(properties)")
-//
-//            self.accessToken = GIDSignIn.sharedInstance().currentUser.authentication.accessToken
-//
-//            YouTubeClient.sharedInstance().getCategories(self.user!)
-//            // ...
-//        }
-//    }
-//    
-//    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
-//              withError error: Error!) {
-//        // Perform any operations when the user disconnects from app here.
-//        // ...
-//    }
+
 
 }
 

@@ -14,6 +14,7 @@ class LoginViewController : UIViewController, GIDSignInDelegate, GIDSignInUIDele
     
     // MARK: Properties
     var appDelegate = UIApplication.shared.delegate as! AppDelegate
+    var dataController: DataController!
     
     
      // TODO: Add label to storyboard and connect as outlet for debugTextLabel
@@ -30,6 +31,7 @@ class LoginViewController : UIViewController, GIDSignInDelegate, GIDSignInUIDele
         super.viewDidLoad()
         
         GIDSignIn.sharedInstance().uiDelegate = self
+        // TODO: Don't hardcode these values
         GIDSignIn.sharedInstance().clientID = "352399262689-3a1vbjcaushnsvt10hkrr4tdai5129lc.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().scopes = [
             "https://www.googleapis.com/auth/youtube"
@@ -69,8 +71,13 @@ class LoginViewController : UIViewController, GIDSignInDelegate, GIDSignInUIDele
             
             appDelegate.accessToken = GIDSignIn.sharedInstance().currentUser.authentication.accessToken
             
-            let controller = storyboard!.instantiateViewController(withIdentifier: "ManagerNavigationController")
-            present(controller, animated: true, completion: nil)
+            UserDefaults.standard.setValue(true, forKey: "authenticated")
+            appDelegate.window?.rootViewController = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateInitialViewController()
+            
+            
+//            let controller = storyboard!.instantiateViewController(withIdentifier: "TabBarController") as? MainTabBarController
+//            controller?.dataController = dataController
+//            present(controller!, animated: true, completion: nil)
             
             
             // ...
