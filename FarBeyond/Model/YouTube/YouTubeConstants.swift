@@ -25,19 +25,21 @@ extension YouTubeClient {
     struct Methods{
         static let GuideCategories = "/guideCategories"
         static let Channels = "/channels"
+        static let Search = "/search"
     
     }
     
-    // MARK: Youtube guideCategories Parameter Keys
+    // MARK: Youtube guideCategories & search Parameter Keys
     struct ParameterKeys{
         static let AccessToken = "access_token"
         static let Part = "part"
         static let RegionCode = "regionCode"
         static let CategoryId = "categoryId"
         static let MaxResults = "maxResults"
+        static let ChannelId = "channelId"
     }
     
-    // MARK: Youtube guideCategories Parameter Values
+    // MARK: Youtube guideCategories & search Parameter Values
     struct ParameterValues{
         static let Snippet = "snippet"
         static let USRegionCode = "us"
@@ -54,6 +56,7 @@ extension YouTubeClient {
         static let Default = "default"
         static let URL = "url"
         static let Thumbnails = "thumbnails"
+        static let VideoId = "videoId"
     }
     
 

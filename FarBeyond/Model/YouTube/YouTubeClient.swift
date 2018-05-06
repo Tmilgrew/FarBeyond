@@ -30,9 +30,10 @@ class YouTubeClient : NSObject {
         
         var request = URLRequest(url: parseURLFromParameters(parameters, withPathExtension: method))
         request.addValue("Bearer " + appDelegate.accessToken, forHTTPHeaderField: "Authorization")
+        //print("\(request)")
         
         request.httpMethod = "GET"
-        //print("Header : \(String(describing: request/*.allHTTPHeaderFields*/))")
+        //print("Header : \(String(describing: request.allHTTPHeaderFields))")
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in
             

@@ -22,7 +22,7 @@ extension YouTubeClient {
             YouTubeClient.ParameterKeys.RegionCode:YouTubeClient.ParameterValues.USRegionCode
         ]
         let method = YouTubeClient.Methods.GuideCategories
-        //print("\(method)")
+        //print("-------------------------------------------------THE METHOD IS: \(method)")
         _ = taskForGETMethod(method, parameters as [String: AnyObject]) { (results, error) in
             
             func sendError(_ error:NSError){
@@ -112,5 +112,37 @@ extension YouTubeClient {
             completionHandlerForGetChannelsFromCategory(channels, nil)
             //print("\(String(describing: channels))")
         }
+    }
+    
+    func getVideosFromChannel(_ user: User, _ channel: String, completionHandlerForGetVideosFromChannel: @escaping (_ results:[AnyObject]?, _ error: NSError?) -> Void){
+        
+        let parameters = [
+            YouTubeClient.ParameterKeys.Part : YouTubeClient.ParameterValues.Snippet,
+            YouTubeClient.ParameterKeys.MaxResults : YouTubeClient.ParameterValues.Twentyfive,
+            YouTubeClient.ParameterKeys.ChannelId : channel
+        ]
+        
+        let method = YouTubeClient.Methods.Search
+        
+        _ = taskForGETMethod(method, parameters as [String:AnyObject], completionHandlerForGET: { (results, error) in
+            
+            func sendError(_ error: NSError){
+                completionHandlerForGetVideosFromChannel(nil, error)
+            }
+            
+            guard error == nil else {
+                sendError(error!)
+                return
+            }
+            
+            // TODO: Change variable CategoryItems to just an 'items' name.  This is not fetching just categories.
+            guard let videos = results?[YouTubeClient.JSONBodyResponse.CategoryItems] as? [AnyObject] else {
+                // TODO: What happens if this fails?
+                return
+            }
+            
+            completionHandlerForGetVideosFromChannel(videos, nil)
+            //print("We have made it!!!")
+        })
     }
 }

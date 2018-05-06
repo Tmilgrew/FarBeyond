@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1462F1B09AC77ED4AC700B0C /* Pods_FarBeyond.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF2183A49E4E89277571902 /* Pods_FarBeyond.framework */; };
+		461FAC03209E4E7E00D6EDEA /* VideoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461FAC02209E4E7E00D6EDEA /* VideoListViewController.swift */; };
 		4670848D2080499400484AD6 /* CategoryChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4670848C2080499400484AD6 /* CategoryChannelViewController.swift */; };
 		4695FD61206C682D002509F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD60206C682D002509F7 /* AppDelegate.swift */; };
 		4695FD66206C682D002509F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4695FD64206C682D002509F7 /* Main.storyboard */; };
@@ -54,6 +55,7 @@
 		1DA7A17222E4A16525C06040 /* Pods_FarBeyondUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FarBeyondUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		201D320CFC0DF1BA9DF23EF2 /* Pods-FarBeyond.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyond.release.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyond/Pods-FarBeyond.release.xcconfig"; sourceTree = "<group>"; };
 		3FA9377AE98257D9FF83A237 /* Pods-FarBeyondUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyondUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyondUITests/Pods-FarBeyondUITests.release.xcconfig"; sourceTree = "<group>"; };
+		461FAC02209E4E7E00D6EDEA /* VideoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListViewController.swift; sourceTree = "<group>"; };
 		4670848C2080499400484AD6 /* CategoryChannelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryChannelViewController.swift; sourceTree = "<group>"; };
 		4695FD5D206C682D002509F7 /* FarBeyond.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FarBeyond.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4695FD60206C682D002509F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 				4670848C2080499400484AD6 /* CategoryChannelViewController.swift */,
 				46DE4BDC20916FBB0010BE06 /* MainTabBarController.swift */,
 				46DE4BDE209427CC0010BE06 /* CoreDataClient.swift */,
+				461FAC02209E4E7E00D6EDEA /* VideoListViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -554,6 +557,7 @@
 				46E6864C207303ED002DA8B5 /* User.swift in Sources */,
 				46C71A212088324900DB5374 /* Category+Extra.swift in Sources */,
 				46C71A1F2088272900DB5374 /* DataController.swift in Sources */,
+				461FAC03209E4E7E00D6EDEA /* VideoListViewController.swift in Sources */,
 				4695FDA2207069E7002509F7 /* YouTubeConvenience.swift in Sources */,
 				4695FD9C206DAFA6002509F7 /* YouTubeClient.swift in Sources */,
 				46AF1145207DA4D4003DEDF0 /* GCDBlackBox.swift in Sources */,

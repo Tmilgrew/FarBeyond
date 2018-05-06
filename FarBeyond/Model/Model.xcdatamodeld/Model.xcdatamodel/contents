@@ -13,9 +13,19 @@
         <attribute name="channelTitle" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="didSubscribe" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="channelToCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="categoryToChannel" inverseEntity="Category" syncable="YES"/>
+        <relationship name="channelToVideo" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Video" inverseName="videoToChannel" inverseEntity="Video" syncable="YES"/>
+    </entity>
+    <entity name="Video" representedClassName="Video" syncable="YES" codeGenerationType="class">
+        <attribute name="videoDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="videoID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="videoThumbnailDefaultData" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="videoThumbnailDefaultURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="videoTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="videoToChannel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Channel" inverseName="channelToVideo" inverseEntity="Channel" syncable="YES"/>
     </entity>
     <elements>
         <element name="Category" positionX="-63" positionY="-18" width="128" height="88"/>
-        <element name="Channel" positionX="205" positionY="-78" width="128" height="148"/>
+        <element name="Channel" positionX="205" positionY="-78" width="128" height="165"/>
+        <element name="Video" positionX="72" positionY="-18" width="128" height="135"/>
     </elements>
 </model>

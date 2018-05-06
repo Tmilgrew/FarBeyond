@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreData
+//import GoogleSignIn
 
 class CategoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
 
@@ -42,9 +43,8 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: - Outlets
     @IBOutlet weak var categoryTableView: UITableView!
     
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         // Inject the dataController into all viewControllers in the MainTabBarController
         //*************************************************************************************
@@ -57,12 +57,35 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         }
-        print("---------------- Here is the Data Controller: \(dataController)")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let indexPath = categoryTableView.indexPathForSelectedRow {
+            self.categoryTableView.deselectRow(at: indexPath, animated: false)
+        }
+        
+        
+        //print("---------------- Here is the Data Controller: \(dataController)")
         // Setup the Fetched Results Controller
         //**************************************************************************************
         //setupFetchedResultsController()
         categoryTableView.dataSource = self
-        callGetCategories()
+        
+        let fetchRequest: NSFetchRequest<Category> = Category.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "id", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        if let result = try? dataController.viewContext.fetch(fetchRequest){
+            if result.count == 0 {
+                self.callGetCategories()
+            } else {
+                categories = result
+            }
+        }
+        
+        //callGetCategories()
         
         //categoryTableView.delegate = self
         
@@ -104,9 +127,9 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
                 if let snippet = item[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] {
                     category.name = snippet[YouTubeClient.JSONBodyResponse.Title] as? String
                 }
-                print("------------- This is category before saving:  \(category)")
+                //print("------------- This is category before saving:  \(category)")
                 try? self.dataController.viewContext.save()
-                print ("------------ This is context after saving: \(self.dataController.viewContext)")
+                //print ("------------ This is context after saving: \(self.dataController.viewContext)")
             }
             
             let fetchRequest : NSFetchRequest<Category> = Category.fetchRequest()
@@ -134,7 +157,7 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "pushToChannels"{
             if let controller = segue.destination as? CategoryChannelViewController {
-                controller.category = categories[(categoryTableView.indexPathForSelectedRow! as NSIndexPath).row].id
+                controller.category = categories[(categoryTableView.indexPathForSelectedRow! as NSIndexPath).row]
                 controller.dataController = self.dataController
             }
         }

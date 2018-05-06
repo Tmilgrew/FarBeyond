@@ -35,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.window?.rootViewController = rootController
                 
             } else {
+                //GIDSignIn.sharedInstance().signInSilently()
                 if let tab = window?.rootViewController as? MainTabBarController {
                     for child in (tab.viewControllers as? [UINavigationController]) ?? [] {
                         let firstViewController = child.viewControllers.first

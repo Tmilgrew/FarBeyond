@@ -8,11 +8,12 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class CategoryChannelViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: Properties
-    var category : String!
+    var category : Category!
     var appDelegate = UIApplication.shared.delegate as! AppDelegate
     var channelsFromCategory: [Channel]?
     var dataController: DataController!
@@ -28,19 +29,35 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        displayChannelsFromCategory(category)
+        super.viewWillAppear(animated)
+        
+        
+        let fetchRequest: NSFetchRequest<Channel> = Channel.fetchRequest()
+        let predicate = NSPredicate(format: "channelToCategory == %@", category)
+        fetchRequest.predicate = predicate
+        let sortDescriptor = NSSortDescriptor(key: "channelID", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        if let result = try? dataController.viewContext.fetch(fetchRequest) {
+            if result.count == 0 {
+                displayChannelsFromCategory(category.id!)
+            } else {
+                channelsFromCategory = result
+            }
+        }
+        
     }
     
     // MARK: Helper Methods
-    private func displayChannelsFromCategory(_ category: String){
+    private func displayChannelsFromCategory(_ categoryId: String){
         
-        YouTubeClient.sharedInstance().getChannelsFromCategory(appDelegate.user, category){ (results, error) in
+        YouTubeClient.sharedInstance().getChannelsFromCategory(appDelegate.user, categoryId){ (results, error) in
             guard error == nil else {
                 // TODO: Take the error and display and error message on the screen
                 return
             }
             
-            var channelArray = [Channel]()
+            //var channelArray = [Channel]()
             for channel in results! {
                 let customChannel = Channel(context: self.dataController.viewContext)
                 customChannel.channelID = channel[YouTubeClient.JSONBodyResponse.CategoryId] as? String
@@ -57,16 +74,36 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
                 //print("\(defaultURL)")
                 //print("\(defaultURL)")
                 customChannel.channelThumbnailURL = defaultURL
-                channelArray.append(customChannel)
+                customChannel.channelToCategory = self.category
+                try? self.dataController.viewContext.save()
+                //channelArray.append(customChannel)
             }
             
-            self.channelsFromCategory = channelArray
+            let fetchRequest : NSFetchRequest<Channel> = Channel.fetchRequest()
+            let predicate = NSPredicate(format: "channelToCategory == %@", self.category)
+            fetchRequest.predicate = predicate
+            let sortDescriptor = NSSortDescriptor(key: "channelID", ascending: true)
+            fetchRequest.sortDescriptors = [sortDescriptor]
+            if let results = try? self.dataController.viewContext.fetch(fetchRequest){
+                self.channelsFromCategory = results
+            }
+            
+            //self.channelsFromCategory = channelArray
             //print("-----The results are: \(String(describing: results))")
             performUIUpdatesOnMain {
                 self.channelTableView.reloadData()
             }
         }
         
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "pushToVideos"{
+            if let controller = segue.destination as? VideoListViewController {
+                controller.channel = channelsFromCategory![(channelTableView.indexPathForSelectedRow! as NSIndexPath).row]
+                controller.dataController = self.dataController
+            }
+        }
     }
 }
 
@@ -85,15 +122,38 @@ extension CategoryChannelViewController {
         cell?.textLabel?.text = channelsFromCategory?[(indexPath as NSIndexPath).row].channelTitle
         cell?.detailTextLabel?.text = channelsFromCategory?[(indexPath as NSIndexPath).row].description
         
-        getDataFromUrl(url: URL(string: (channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailURL)!)!) { (data, response, error) in
-            guard let data = data, error == nil else{
-                return
+        if channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailData == nil {
+//            cell?.imageView?.image = UIImage(named: "placeholder")
+//            cell.activityIndicator.isHidden = false
+//            cell.activityIndicator.startAnimating()
+            
+            DispatchQueue.main.async(){
+                //let backgroundPhoto = backgroundContext.object(with: photoID) as! Photo
+                let image = try! UIImage(data: Data(contentsOf: URL(string: (self.channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailURL)!)!))
+                self.channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailData = UIImagePNGRepresentation(image!)
+                try? self.dataController.viewContext.save()
+//                cell.activityIndicator.isHidden = true
+//                cell.activityIndicator.stopAnimating()
+                performUIUpdatesOnMain {
+                    cell?.imageView?.image = image
+                    self.channelTableView.reloadData()
+                }
+                
             }
-            performUIUpdatesOnMain {
-                cell?.imageView?.image = UIImage(data: data)
-                self.channelTableView.reloadData()
-            }
+        } else {
+            let image = UIImage(data: (channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailData)! as Data)
+            cell?.imageView?.image = image
         }
+        
+//        getDataFromUrl(url: URL(string: (channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailURL)!)!) { (data, response, error) in
+//            guard let data = data, error == nil else{
+//                return
+//            }
+//            performUIUpdatesOnMain {
+//                cell?.imageView?.image = UIImage(data: data)
+//                self.channelTableView.reloadData()
+//            }
+//        }
         
         return cell!
     }
