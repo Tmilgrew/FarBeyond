@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import GoogleSignIn
 
 
 // MARK: - TMDBClient: NSObject
@@ -29,7 +30,7 @@ class YouTubeClient : NSObject {
     func taskForGETMethod(_ method: String, _ parameters: [String:AnyObject], completionHandlerForGET: @escaping (_ result: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         var request = URLRequest(url: parseURLFromParameters(parameters, withPathExtension: method))
-        request.addValue("Bearer " + appDelegate.accessToken, forHTTPHeaderField: "Authorization")
+        request.addValue("Bearer " + GIDSignIn.sharedInstance().currentUser.authentication.accessToken, forHTTPHeaderField: "Authorization")
         //print("\(request)")
         
         request.httpMethod = "GET"

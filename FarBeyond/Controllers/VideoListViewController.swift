@@ -14,9 +14,9 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
     
     // MARK: Properties
     var dataController: DataController!
-    var channel : Channel!
+    var channel : YouTubeChannel!
     var appDelegate = UIApplication.shared.delegate as! AppDelegate
-    var videos : [Video]?
+    var videos : [YouTubeVideo] = []
     
     
     // MARK: Outlets
@@ -33,25 +33,27 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let fetchRequest: NSFetchRequest<Video> = Video.fetchRequest()
-        let predicate = NSPredicate(format: "videoToChannel == %@", channel)
-        fetchRequest.predicate = predicate
-        let sortDescriptor = NSSortDescriptor(key: "videoID", ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
+//        let fetchRequest: NSFetchRequest<Video> = Video.fetchRequest()
+//        let predicate = NSPredicate(format: "videoToChannel == %@", channel)
+//        fetchRequest.predicate = predicate
+//        let sortDescriptor = NSSortDescriptor(key: "videoID", ascending: true)
+//        fetchRequest.sortDescriptors = [sortDescriptor]
         
-        if let result = try? dataController.viewContext.fetch(fetchRequest) {
-            if result.count == 0 {
-                displayVideosFromChannel(channel.channelID!)
-            } else {
-                videos = result
-            }
-        }
+//        if let result = try? dataController.viewContext.fetch(fetchRequest) {
+//            if result.count == 0 {
+//                displayVideosFromChannel(channel.channelID!)
+//            } else {
+//                videos = result
+//            }
+//        }
+        
+        displayVideosFromChannel(channel.channelID!)
     }
     
     // MARK: Helper Methods
     private func displayVideosFromChannel(_ video: String){
         
-        YouTubeClient.sharedInstance().getVideosFromChannel(appDelegate.user, video){(results, error) in
+        YouTubeClient.sharedInstance().getVideosFromChannel(video){(results, error) in
             guard error == nil else {
                 // TODO: Take the error and display an error message on the screen
                 return
@@ -60,9 +62,10 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
             // TODO: we should unwrap results rather than '!'
             //var videoArray = [Video]()
             for video in results! {
-                let newVideo = Video(context: self.dataController.viewContext)
+                print("The results are: \(results)")
+                var newVideo = YouTubeVideo()
                 
-                if let idObject = video[YouTubeClient.JSONBodyResponse.CategoryId] as? [String: AnyObject]{
+                if let idObject = video[YouTubeClient.JSONBodyResponse.Id] as? [String: AnyObject]{
                     newVideo.videoID = idObject[YouTubeClient.JSONBodyResponse.VideoId] as? String
                 }
                 
@@ -77,19 +80,22 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
                     }
                 }
                 newVideo.videoToChannel = self.channel
-                try? self.dataController.viewContext.save()
+                print("-------The new Video is : \(newVideo)")
+                self.videos.append(newVideo)
+                print("--------------in loop video array: \(self.videos)")
+                //try? self.dataController.viewContext.save()
                 //videoArray.append(newVideo)
             }
             
-            let fetchRequest : NSFetchRequest<Video> = Video.fetchRequest()
-            let predicate = NSPredicate(format: "videoToChannel == %@", self.channel)
-            fetchRequest.predicate = predicate
-            let sortDescriptor = NSSortDescriptor(key: "videoID", ascending: true)
-            fetchRequest.sortDescriptors = [sortDescriptor]
-            if let results = try? self.dataController.viewContext.fetch(fetchRequest){
-                self.videos = results
-            }
-            
+//            let fetchRequest : NSFetchRequest<Video> = Video.fetchRequest()
+//            let predicate = NSPredicate(format: "videoToChannel == %@", self.channel)
+//            fetchRequest.predicate = predicate
+//            let sortDescriptor = NSSortDescriptor(key: "videoID", ascending: true)
+//            fetchRequest.sortDescriptors = [sortDescriptor]
+//            if let results = try? self.dataController.viewContext.fetch(fetchRequest){
+//                self.videos = results
+//            }
+            print("------------------VIdeoArray is: \(self.videos)")
             //self.videos = videoArray
             performUIUpdatesOnMain {
                 self.videoTableView.reloadData()
@@ -104,7 +110,11 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
 extension VideoListViewController {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return videos?.count ?? 0
+        return videos.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -112,27 +122,32 @@ extension VideoListViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier)
         
         // TODO: Decorate the cell
-        cell?.textLabel?.text = videos?[(indexPath as NSIndexPath).row].videoTitle
-        cell?.detailTextLabel?.text = videos?[(indexPath as NSIndexPath).row].description
+        cell?.textLabel?.text = videos[(indexPath as NSIndexPath).row].videoTitle
+        cell?.detailTextLabel?.text = videos[(indexPath as NSIndexPath).row].videoDescription
+        cell?.detailTextLabel?.numberOfLines = 2
         
-        if videos?[(indexPath as NSIndexPath).row].videoThumbnailDefaultData == nil {
+        if videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultData == nil {
             //            cell?.imageView?.image = UIImage(named: "placeholder")
             //            cell.activityIndicator.isHidden = false
             //            cell.activityIndicator.startAnimating()
             
             DispatchQueue.main.async() {
-                let image = try! UIImage(data: Data(contentsOf: URL(string: (self.videos?[(indexPath as NSIndexPath).row].videoThumbnailDefaultURL)!)!))
-                self.videos?[(indexPath as NSIndexPath).row].videoThumbnailDefaultData = UIImagePNGRepresentation(image!)
-                try? self.dataController.viewContext.save()
+                let image = try! UIImage(data: Data(contentsOf: URL(string: (self.videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultURL)!)!))
+                self.videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultData = UIImagePNGRepresentation(image!)
+                //try? self.dataController.viewContext.save()
                 
                 performUIUpdatesOnMain {
                     cell?.imageView?.image = image
+                    cell?.textLabel?.text = self.videos[(indexPath as NSIndexPath).row].videoTitle
+                    cell?.detailTextLabel?.text = self.videos[(indexPath as NSIndexPath).row].videoDescription
                     self.videoTableView.reloadData()
                 }
             }
         } else {
-            let image = UIImage(data: (videos?[(indexPath as NSIndexPath).row].videoThumbnailDefaultData)! as Data)
+            let image = UIImage(data: (videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultData)! as Data)
             cell?.imageView?.image = image
+            cell?.textLabel?.text = videos[(indexPath as NSIndexPath).row].videoTitle
+            cell?.detailTextLabel?.text = videos[(indexPath as NSIndexPath).row].videoDescription
         }
         
 //        getDataFromUrl(url: URL(string: (videos?[(indexPath as NSIndexPath).row].videoThumbnailDefaultURL)!)!) { (data, response, error) in

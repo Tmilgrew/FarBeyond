@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FarBeyond/Model/YouTube/YouTubeClient.swift"
-            timestampString = "547325914.249758"
+            timestampString = "548008170.799123"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
             landmarkName = "taskForGETMethod(_:_:completionHandlerForGET:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -25,14 +25,14 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FarBeyond/Controllers/CategoryViewController.swift"
-            timestampString = "547338929.661756"
+            filePath = "FarBeyond/Controllers/VideoListViewController.swift"
+            timestampString = "548012412.020695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
-            landmarkName = "viewWillAppear(_:)"
-            landmarkType = "7">
+            startingLineNumber = "125"
+            endingLineNumber = "125"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -41,14 +41,46 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FarBeyond/Controllers/CategoryViewController.swift"
-            timestampString = "547338929.662303"
+            filePath = "FarBeyond/Controllers/VideoListViewController.swift"
+            timestampString = "548012412.0208369"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
-            landmarkName = "callGetCategories()"
-            landmarkType = "7">
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "unknown"
+            landmarkType = "0">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "FarBeyond.VideoListViewController.(displayVideosFromChannel in _2E696D9DF992B9FFB956C60A100A2ED8)(Swift.String) -&gt; ()"
+                  moduleName = "FarBeyond"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thomasmilgrew/Documents/iOSProjects/FarBeyond/FarBeyond/Controllers/VideoListViewController.swift"
+                  timestampString = "548008978.482366"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "56"
+                  endingLineNumber = "56"
+                  offsetFromSymbolStart = "26">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Array&lt;Swift.AnyObject&gt;&gt;, Swift.Optional&lt;__ObjC.NSError&gt;) -&gt; () in FarBeyond.VideoListViewController.(displayVideosFromChannel in _2E696D9DF992B9FFB956C60A100A2ED8)(Swift.String) -&gt; ()"
+                  moduleName = "FarBeyond"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thomasmilgrew/Documents/iOSProjects/FarBeyond/FarBeyond/Controllers/VideoListViewController.swift"
+                  timestampString = "548008978.485098"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "57"
+                  endingLineNumber = "57"
+                  offsetFromSymbolStart = "41">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -57,30 +89,14 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FarBeyond/Controllers/CategoryViewController.swift"
-            timestampString = "547338929.662716"
+            filePath = "FarBeyond/Controllers/VideoListViewController.swift"
+            timestampString = "548012412.020964"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "51"
-            endingLineNumber = "51"
-            landmarkName = "viewDidLoad()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FarBeyond/Controllers/CategoryViewController.swift"
-            timestampString = "547338929.663118"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "viewWillAppear(_:)"
-            landmarkType = "7">
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

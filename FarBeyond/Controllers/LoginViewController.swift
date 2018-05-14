@@ -31,18 +31,16 @@ class LoginViewController : UIViewController, GIDSignInDelegate, GIDSignInUIDele
         super.viewDidLoad()
         
         GIDSignIn.sharedInstance().uiDelegate = self
+        GIDSignIn.sharedInstance().delegate = self
+        
         // TODO: Don't hardcode these values
         GIDSignIn.sharedInstance().clientID = "352399262689-3a1vbjcaushnsvt10hkrr4tdai5129lc.apps.googleusercontent.com"
-        GIDSignIn.sharedInstance().scopes = [
-            "https://www.googleapis.com/auth/youtube"
-        ]
-        GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().scopes = ["https://www.googleapis.com/auth/youtube"]
+        
+        GIDSignIn.sharedInstance().signInSilently()
+        
         // TODO: Implement configureBackground()
         //configureBackground()
-        
-        
-        
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -57,22 +55,24 @@ class LoginViewController : UIViewController, GIDSignInDelegate, GIDSignInUIDele
         if let error = error {
             print("\(error.localizedDescription)")
         } else {
+            
+            performSegue(withIdentifier: "segueToContent", sender: self)
             // Perform any operations on signed in user here.
-            let userId = user.userID                  // For client-side use only!
-            let idToken = user.authentication.idToken // Safe to send to the server
-            let fullName = user.profile.name
-            let givenName = user.profile.givenName
-            let familyName = user.profile.familyName
-            let email = user.profile.email
+//            let userId = user.userID                  // For client-side use only!
+//            let idToken = user.authentication.idToken // Safe to send to the server
+//            let fullName = user.profile.name
+//            let givenName = user.profile.givenName
+//            let familyName = user.profile.familyName
+//            let email = user.profile.email
             
-            let properties = [userId, idToken, fullName, givenName, familyName, email]
-            appDelegate.user = User(properties as! [String])
-            print("\(properties)")
+//            let properties = [userId, idToken, fullName, givenName, familyName, email]
+//            appDelegate.user = User(properties as! [String])
+//            print("\(properties)")
+//
+//            appDelegate.accessToken = GIDSignIn.sharedInstance().currentUser.authentication.accessToken
             
-            appDelegate.accessToken = GIDSignIn.sharedInstance().currentUser.authentication.accessToken
-            
-            UserDefaults.standard.setValue(true, forKey: "authenticated")
-            appDelegate.window?.rootViewController = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateInitialViewController()
+//            UserDefaults.standard.setValue(true, forKey: "authenticated")
+//            appDelegate.window?.rootViewController = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateInitialViewController()
             
             
 //            let controller = storyboard!.instantiateViewController(withIdentifier: "TabBarController") as? MainTabBarController

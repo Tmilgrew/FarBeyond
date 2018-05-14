@@ -20,7 +20,7 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
     var appDelegate = UIApplication.shared.delegate as! AppDelegate
     //var categoryStrings : [String]?
     //var categoryStrings = [String]()
-    var categories: [Category] = []
+    var categories: [YouTubeCategory] = []
     var dataController: DataController!
 //    var fetchedResultsController:NSFetchedResultsController<Category>!
     
@@ -48,11 +48,12 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
         
         // Inject the dataController into all viewControllers in the MainTabBarController
         //*************************************************************************************
-        if let tab = appDelegate.window?.rootViewController as? MainTabBarController {
+        
+        if let tab = self.tabBarController as? MainTabBarController {
             for child in (tab.viewControllers as? [UINavigationController]) ?? []
             {
-                let firstViewController = child.viewControllers.first
-                if let top = firstViewController as? CoreDataClient {
+                let viewController = child.viewControllers.first
+                if let top = viewController as? CoreDataClient {
                     top.setStack(stack: appDelegate.dataController)
                 }
             }
@@ -67,26 +68,25 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         
-        //print("---------------- Here is the Data Controller: \(dataController)")
         // Setup the Fetched Results Controller
         //**************************************************************************************
         //setupFetchedResultsController()
         categoryTableView.dataSource = self
         
-        let fetchRequest: NSFetchRequest<Category> = Category.fetchRequest()
-        let sortDescriptor = NSSortDescriptor(key: "id", ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        //let fetchRequest: NSFetchRequest<Category> = Category.fetchRequest()
+        //let sortDescriptor = NSSortDescriptor(key: "id", ascending: true)
+        //fetchRequest.sortDescriptors = [sortDescriptor]
         
-        if let result = try? dataController.viewContext.fetch(fetchRequest){
-            if result.count == 0 {
-                self.callGetCategories()
-            } else {
-                categories = result
-            }
+        //if let result = try? dataController.viewContext.fetch(fetchRequest){
+//            if result.count == 0 {
+//                self.callGetCategories()
+//            } else {
+//                categories = result
+//            }
+//        }
+        if categories.count == 0 {
+            callGetCategories()
         }
-        
-        //callGetCategories()
-        
         //categoryTableView.delegate = self
         
         // If there are zero objects for Category then get the categories
@@ -108,7 +108,7 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func callGetCategories(){
-        YouTubeClient.sharedInstance().getCategories(appDelegate.user!){(results, error) in
+        YouTubeClient.sharedInstance().getCategories(){(results, error) in
             
             guard error == nil else {
                 // TODO: Take the error and display and error message on the screen
@@ -120,24 +120,27 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
 //            editorCategory.append("Editor's Pick")
 //            self.addCategory(editorCategory)
             
+            //var categoryArray = [YouTubeCategory]()
             for item in results! {
-                let category = Category(context: self.dataController.viewContext)
-                category.id = item[YouTubeClient.JSONBodyResponse.CategoryId] as? String
+                var category = YouTubeCategory()
+                //let category = Category(context: self.dataController.viewContext)
+                category.id = item[YouTubeClient.JSONBodyResponse.Id] as? String
                 
                 if let snippet = item[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] {
                     category.name = snippet[YouTubeClient.JSONBodyResponse.Title] as? String
                 }
+                self.categories.append(category)
                 //print("------------- This is category before saving:  \(category)")
-                try? self.dataController.viewContext.save()
+                //try? self.dataController.viewContext.save()
                 //print ("------------ This is context after saving: \(self.dataController.viewContext)")
             }
             
-            let fetchRequest : NSFetchRequest<Category> = Category.fetchRequest()
-            let sortDescriptor = NSSortDescriptor(key: "id", ascending: true)
-            fetchRequest.sortDescriptors = [sortDescriptor]
-            if let result = try? self.dataController.viewContext.fetch(fetchRequest){
-                self.categories = result
-            }
+//            let fetchRequest : NSFetchRequest<Category> = Category.fetchRequest()
+//            let sortDescriptor = NSSortDescriptor(key: "id", ascending: true)
+//            fetchRequest.sortDescriptors = [sortDescriptor]
+//            if let result = try? self.dataController.viewContext.fetch(fetchRequest){
+//                self.categories = result
+//            }
             
             //print("\(String(describing: self.fetchedResultsController.fetchedObjects))")
             performUIUpdatesOnMain {
@@ -157,7 +160,7 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "pushToChannels"{
             if let controller = segue.destination as? CategoryChannelViewController {
-                controller.category = categories[(categoryTableView.indexPathForSelectedRow! as NSIndexPath).row]
+                controller.category = categories[(categoryTableView.indexPathForSelectedRow! as NSIndexPath).row] 
                 controller.dataController = self.dataController
             }
         }

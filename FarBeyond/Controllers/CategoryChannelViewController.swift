@@ -13,9 +13,9 @@ import CoreData
 class CategoryChannelViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: Properties
-    var category : Category!
+    var category : YouTubeCategory!
     var appDelegate = UIApplication.shared.delegate as! AppDelegate
-    var channelsFromCategory: [Channel]?
+    var channelsFromCategory: [YouTubeChannel] = []
     var dataController: DataController!
     
     // MARK: Outlets
@@ -32,26 +32,26 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
         super.viewWillAppear(animated)
         
         
-        let fetchRequest: NSFetchRequest<Channel> = Channel.fetchRequest()
-        let predicate = NSPredicate(format: "channelToCategory == %@", category)
-        fetchRequest.predicate = predicate
-        let sortDescriptor = NSSortDescriptor(key: "channelID", ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        //let fetchRequest: NSFetchRequest<Channel> = Channel.fetchRequest()
+        //let predicate = NSPredicate(format: "channelToCategory == %@", category)
+//        fetchRequest.predicate = predicate
+//        let sortDescriptor = NSSortDescriptor(key: "channelID", ascending: true)
+//        fetchRequest.sortDescriptors = [sortDescriptor]
         
-        if let result = try? dataController.viewContext.fetch(fetchRequest) {
-            if result.count == 0 {
-                displayChannelsFromCategory(category.id!)
-            } else {
-                channelsFromCategory = result
-            }
-        }
-        
+        //if let result = try? dataController.viewContext.fetch(fetchRequest) {
+//            if result.count == 0 {
+//                displayChannelsFromCategory(category.id!)
+//            } else {
+//                channelsFromCategory = result
+//            }
+//        }
+        displayChannelsFromCategory(category.id!)
     }
     
     // MARK: Helper Methods
     private func displayChannelsFromCategory(_ categoryId: String){
         
-        YouTubeClient.sharedInstance().getChannelsFromCategory(appDelegate.user, categoryId){ (results, error) in
+        YouTubeClient.sharedInstance().getChannelsFromCategory(categoryId){ (results, error) in
             guard error == nil else {
                 // TODO: Take the error and display and error message on the screen
                 return
@@ -59,8 +59,8 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
             
             //var channelArray = [Channel]()
             for channel in results! {
-                let customChannel = Channel(context: self.dataController.viewContext)
-                customChannel.channelID = channel[YouTubeClient.JSONBodyResponse.CategoryId] as? String
+                var customChannel = YouTubeChannel()
+                customChannel.channelID = channel[YouTubeClient.JSONBodyResponse.Id] as? String
                 
                 
                 
@@ -73,20 +73,20 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
                 let defaultURL = defaultThumbnail?[YouTubeClient.JSONBodyResponse.URL] as? String
                 //print("\(defaultURL)")
                 //print("\(defaultURL)")
-                customChannel.channelThumbnailURL = defaultURL
+                customChannel.channelThumbnailURLString = defaultURL
                 customChannel.channelToCategory = self.category
-                try? self.dataController.viewContext.save()
-                //channelArray.append(customChannel)
+                //try? self.dataController.viewContext.save()
+                self.channelsFromCategory.append(customChannel)
             }
             
-            let fetchRequest : NSFetchRequest<Channel> = Channel.fetchRequest()
-            let predicate = NSPredicate(format: "channelToCategory == %@", self.category)
-            fetchRequest.predicate = predicate
-            let sortDescriptor = NSSortDescriptor(key: "channelID", ascending: true)
-            fetchRequest.sortDescriptors = [sortDescriptor]
-            if let results = try? self.dataController.viewContext.fetch(fetchRequest){
-                self.channelsFromCategory = results
-            }
+//            let fetchRequest : NSFetchRequest<Channel> = Channel.fetchRequest()
+//            let predicate = NSPredicate(format: "channelToCategory == %@", self.category)
+//            fetchRequest.predicate = predicate
+//            let sortDescriptor = NSSortDescriptor(key: "channelID", ascending: true)
+//            fetchRequest.sortDescriptors = [sortDescriptor]
+//            if let results = try? self.dataController.viewContext.fetch(fetchRequest){
+//                self.channelsFromCategory = results
+//            }
             
             //self.channelsFromCategory = channelArray
             //print("-----The results are: \(String(describing: results))")
@@ -100,7 +100,7 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "pushToVideos"{
             if let controller = segue.destination as? VideoListViewController {
-                controller.channel = channelsFromCategory![(channelTableView.indexPathForSelectedRow! as NSIndexPath).row]
+                controller.channel = channelsFromCategory[(channelTableView.indexPathForSelectedRow! as NSIndexPath).row]
                 controller.dataController = self.dataController
             }
         }
@@ -111,7 +111,11 @@ extension CategoryChannelViewController {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // TODO: Configure the number of rows based on number of categories
-        return channelsFromCategory?.count ?? 0
+        return channelsFromCategory.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -119,18 +123,19 @@ extension CategoryChannelViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier)
         
         // TODO: Decorate the cell
-        cell?.textLabel?.text = channelsFromCategory?[(indexPath as NSIndexPath).row].channelTitle
-        cell?.detailTextLabel?.text = channelsFromCategory?[(indexPath as NSIndexPath).row].description
+        cell?.textLabel?.text = channelsFromCategory[(indexPath as NSIndexPath).row].channelTitle
+        cell?.detailTextLabel?.text = channelsFromCategory[(indexPath as NSIndexPath).row].channelDescription
+        cell?.detailTextLabel?.numberOfLines = 2
         
-        if channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailData == nil {
+        if channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailImageData == nil {
 //            cell?.imageView?.image = UIImage(named: "placeholder")
 //            cell.activityIndicator.isHidden = false
 //            cell.activityIndicator.startAnimating()
             
             DispatchQueue.main.async(){
                 //let backgroundPhoto = backgroundContext.object(with: photoID) as! Photo
-                let image = try! UIImage(data: Data(contentsOf: URL(string: (self.channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailURL)!)!))
-                self.channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailData = UIImagePNGRepresentation(image!)
+                let image = try! UIImage(data: Data(contentsOf: URL(string: (self.channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailURLString)!)!))
+                self.channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailImageData = UIImagePNGRepresentation(image!)
                 try? self.dataController.viewContext.save()
 //                cell.activityIndicator.isHidden = true
 //                cell.activityIndicator.stopAnimating()
@@ -141,7 +146,7 @@ extension CategoryChannelViewController {
                 
             }
         } else {
-            let image = UIImage(data: (channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailData)! as Data)
+            let image = UIImage(data: (channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailImageData)! as Data)
             cell?.imageView?.image = image
         }
         

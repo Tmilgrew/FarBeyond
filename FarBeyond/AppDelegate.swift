@@ -13,10 +13,10 @@ import GoogleSignIn
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var user: User!
+//    var user: User!
 //    var category: [Category]?
 //    var channelsFromCategory: [Channel]?
-    var accessToken : String!
+//    var accessToken : String!
     let dataController = DataController(modelName: "Model")
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -24,38 +24,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // If the the 'authenticated' value is set up in UserDefaults continue forward,
         // otherwise go to else statement
-        //******************************************************************************************
-        if let authenticatedUser = UserDefaults.standard.value(forKey: "authenticated") {
-            
-            // The value for 'authenticated' has been set before.  Is the value false?
-            // The user is then not signed in.  Execute the following block of code
-            //**************************************************************************************
-            if authenticatedUser as! Bool == false {
-                let rootController = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "LoginViewController")
-                self.window?.rootViewController = rootController
-                
-            } else {
-                //GIDSignIn.sharedInstance().signInSilently()
-                if let tab = window?.rootViewController as? MainTabBarController {
-                    for child in (tab.viewControllers as? [UINavigationController]) ?? [] {
-                        let firstViewController = child.viewControllers.first
-                        if let top = firstViewController as? CoreDataClient {
-                            top.setStack(stack: dataController)
-                        }
-                    }
-                }
-            }
-        // The 'authenticated' valuse has not been set up.
-        // This block sets the initial value for 'authenticated' in UserDefaults.
-        // After we set the value, we make the rootViewController the LoginViewController
-        //*******************************************************************************************
-        } else {
-            UserDefaults.standard.setValue(false, forKey: "authenticated")
-            
-            let rootController = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "LoginViewController")
-            self.window?.rootViewController = rootController
-            print("This is the first time launching the app!")
-        }
+//        //******************************************************************************************
+//        if let authenticatedUser = UserDefaults.standard.value(forKey: "authenticated") {
+//
+//            // The value for 'authenticated' has been set before.  Is the value false?
+//            // The user is then not signed in.  Execute the following block of code
+//            //**************************************************************************************
+//            if authenticatedUser as! Bool == false {
+//                let rootController = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "LoginViewController")
+//                self.window?.rootViewController = rootController
+//
+//            } else {
+//                //GIDSignIn.sharedInstance().signInSilently()
+//                if let tab = window?.rootViewController as? MainTabBarController {
+//                    for child in (tab.viewControllers as? [UINavigationController]) ?? [] {
+//                        let firstViewController = child.viewControllers.first
+//                        if let top = firstViewController as? CoreDataClient {
+//                            top.setStack(stack: dataController)
+//                        }
+//                    }
+//                }
+//            }
+//        // The 'authenticated' valuse has not been set up.
+//        // This block sets the initial value for 'authenticated' in UserDefaults.
+//        // After we set the value, we make the rootViewController the LoginViewController
+//        //*******************************************************************************************
+//        } else {
+//            UserDefaults.standard.setValue(false, forKey: "authenticated")
+//
+//            let rootController = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "LoginViewController")
+//            self.window?.rootViewController = rootController
+//            print("This is the first time launching the app!")
+//        }
         
         //dataController.load()
 //        let rootViewController = window?.rootViewController as? MainTabBarController
@@ -91,19 +91,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        UserDefaults.standard.setValue(false, forKey: "authenticated")
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
-        
         return GIDSignIn.sharedInstance().handle(url, sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String, annotation:options[UIApplicationOpenURLOptionsKey.annotation])
     }
     
     // Deprecated method for app to run on iOS 8 and older.
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        
-        
-        
         return GIDSignIn.sharedInstance().handle(url, sourceApplication: sourceApplication, annotation: annotation)
     }
     

@@ -37,6 +37,9 @@ extension YouTubeClient {
         static let CategoryId = "categoryId"
         static let MaxResults = "maxResults"
         static let ChannelId = "channelId"
+        static let Q = "q"
+        static let resourceType = "type"
+        
     }
     
     // MARK: Youtube guideCategories & search Parameter Values
@@ -44,6 +47,7 @@ extension YouTubeClient {
         static let Snippet = "snippet"
         static let USRegionCode = "us"
         static let Twentyfive = "25"
+        static let Channel = "channel"
     }
     
     // MARK: JSON Body Response Constants
@@ -51,12 +55,13 @@ extension YouTubeClient {
         static let CategoryItems = "items"
         static let Snippet = "snippet"
         static let Title = "title"
-        static let CategoryId = "id"
+        static let Id = "id"
         static let Description = "description"
         static let Default = "default"
         static let URL = "url"
         static let Thumbnails = "thumbnails"
         static let VideoId = "videoId"
+        static let ChannelId = "channelId"
     }
     
 

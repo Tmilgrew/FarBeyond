@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		1462F1B09AC77ED4AC700B0C /* Pods_FarBeyond.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF2183A49E4E89277571902 /* Pods_FarBeyond.framework */; };
 		461FAC03209E4E7E00D6EDEA /* VideoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461FAC02209E4E7E00D6EDEA /* VideoListViewController.swift */; };
+		4636EAC420A9F02F004D3547 /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4636EAC320A9F02F004D3547 /* VideoTableViewCell.swift */; };
+		46492B5120A3BF9B00EC9FCA /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46492B5020A3BF9B00EC9FCA /* SearchViewController.swift */; };
+		46492B5320A3C0F100EC9FCA /* YouTubeVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46492B5220A3C0F100EC9FCA /* YouTubeVideo.swift */; };
+		46492B5520A3C45A00EC9FCA /* YouTubeChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46492B5420A3C45A00EC9FCA /* YouTubeChannel.swift */; };
+		46492B5720A3C48500EC9FCA /* YouTubeCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46492B5620A3C48500EC9FCA /* YouTubeCategory.swift */; };
+		4665CBF020A799AF00627553 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4665CBEF20A799AF00627553 /* SearchResultCell.swift */; };
 		4670848D2080499400484AD6 /* CategoryChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4670848C2080499400484AD6 /* CategoryChannelViewController.swift */; };
 		4695FD61206C682D002509F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD60206C682D002509F7 /* AppDelegate.swift */; };
 		4695FD66206C682D002509F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4695FD64206C682D002509F7 /* Main.storyboard */; };
@@ -56,6 +62,12 @@
 		201D320CFC0DF1BA9DF23EF2 /* Pods-FarBeyond.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyond.release.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyond/Pods-FarBeyond.release.xcconfig"; sourceTree = "<group>"; };
 		3FA9377AE98257D9FF83A237 /* Pods-FarBeyondUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyondUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyondUITests/Pods-FarBeyondUITests.release.xcconfig"; sourceTree = "<group>"; };
 		461FAC02209E4E7E00D6EDEA /* VideoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListViewController.swift; sourceTree = "<group>"; };
+		4636EAC320A9F02F004D3547 /* VideoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
+		46492B5020A3BF9B00EC9FCA /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		46492B5220A3C0F100EC9FCA /* YouTubeVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeVideo.swift; sourceTree = "<group>"; };
+		46492B5420A3C45A00EC9FCA /* YouTubeChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeChannel.swift; sourceTree = "<group>"; };
+		46492B5620A3C48500EC9FCA /* YouTubeCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeCategory.swift; sourceTree = "<group>"; };
+		4665CBEF20A799AF00627553 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		4670848C2080499400484AD6 /* CategoryChannelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryChannelViewController.swift; sourceTree = "<group>"; };
 		4695FD5D206C682D002509F7 /* FarBeyond.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FarBeyond.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4695FD60206C682D002509F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -198,6 +210,8 @@
 		4695FD8F206C6F9B002509F7 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4665CBEF20A799AF00627553 /* SearchResultCell.swift */,
+				4636EAC320A9F02F004D3547 /* VideoTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -212,6 +226,7 @@
 				46DE4BDC20916FBB0010BE06 /* MainTabBarController.swift */,
 				46DE4BDE209427CC0010BE06 /* CoreDataClient.swift */,
 				461FAC02209E4E7E00D6EDEA /* VideoListViewController.swift */,
+				46492B5020A3BF9B00EC9FCA /* SearchViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -230,6 +245,9 @@
 				4695FD9B206DAFA6002509F7 /* YouTubeClient.swift */,
 				4695FD9D206DAFB7002509F7 /* YouTubeConstants.swift */,
 				4695FDA1207069E7002509F7 /* YouTubeConvenience.swift */,
+				46492B5220A3C0F100EC9FCA /* YouTubeVideo.swift */,
+				46492B5420A3C45A00EC9FCA /* YouTubeChannel.swift */,
+				46492B5620A3C48500EC9FCA /* YouTubeCategory.swift */,
 			);
 			path = YouTube;
 			sourceTree = "<group>";
@@ -550,17 +568,23 @@
 				4695FDA0206DCBC6002509F7 /* LoginViewController.swift in Sources */,
 				46DE4BDF209427CC0010BE06 /* CoreDataClient.swift in Sources */,
 				4695FD9E206DAFB7002509F7 /* YouTubeConstants.swift in Sources */,
+				4636EAC420A9F02F004D3547 /* VideoTableViewCell.swift in Sources */,
+				46492B5720A3C48500EC9FCA /* YouTubeCategory.swift in Sources */,
 				46DE4BDD20916FBB0010BE06 /* MainTabBarController.swift in Sources */,
 				4670848D2080499400484AD6 /* CategoryChannelViewController.swift in Sources */,
+				46492B5120A3BF9B00EC9FCA /* SearchViewController.swift in Sources */,
+				4665CBF020A799AF00627553 /* SearchResultCell.swift in Sources */,
 				4695FD99206CE18E002509F7 /* CategoryViewController.swift in Sources */,
 				4695FD95206C76C4002509F7 /* CategoryTableViewDelegate.swift in Sources */,
 				46E6864C207303ED002DA8B5 /* User.swift in Sources */,
 				46C71A212088324900DB5374 /* Category+Extra.swift in Sources */,
 				46C71A1F2088272900DB5374 /* DataController.swift in Sources */,
 				461FAC03209E4E7E00D6EDEA /* VideoListViewController.swift in Sources */,
+				46492B5520A3C45A00EC9FCA /* YouTubeChannel.swift in Sources */,
 				4695FDA2207069E7002509F7 /* YouTubeConvenience.swift in Sources */,
 				4695FD9C206DAFA6002509F7 /* YouTubeClient.swift in Sources */,
 				46AF1145207DA4D4003DEDF0 /* GCDBlackBox.swift in Sources */,
+				46492B5320A3C0F100EC9FCA /* YouTubeVideo.swift in Sources */,
 				4695FD61206C682D002509F7 /* AppDelegate.swift in Sources */,
 				46C71A1D2086E1C200DB5374 /* Model.xcdatamodeld in Sources */,
 			);

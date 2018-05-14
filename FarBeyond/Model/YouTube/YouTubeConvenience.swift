@@ -15,7 +15,7 @@ import UIKit
 
 extension YouTubeClient {
     
-    func getCategories(_ user : User, completionHandlerForGetCategories: @escaping (_ results:[AnyObject]?, _ error: NSError?) -> Void){
+    func getCategories(completionHandlerForGetCategories: @escaping (_ results:[AnyObject]?, _ error: NSError?) -> Void){
         
         let parameters = [
             YouTubeClient.ParameterKeys.Part:YouTubeClient.ParameterValues.Snippet,
@@ -64,7 +64,7 @@ extension YouTubeClient {
         
     }
     
-    func getChannelsFromCategory(_ user: User, _ category: String, completionHandlerForGetChannelsFromCategory: @escaping (_ results:[AnyObject]?, _ error: NSError?) -> Void){
+    func getChannelsFromCategory(_ category: String, completionHandlerForGetChannelsFromCategory: @escaping (_ results:[AnyObject]?, _ error: NSError?) -> Void){
         
         let parameters = [
             YouTubeClient.ParameterKeys.Part : YouTubeClient.ParameterValues.Snippet,
@@ -114,7 +114,7 @@ extension YouTubeClient {
         }
     }
     
-    func getVideosFromChannel(_ user: User, _ channel: String, completionHandlerForGetVideosFromChannel: @escaping (_ results:[AnyObject]?, _ error: NSError?) -> Void){
+    func getVideosFromChannel(_ channel: String, completionHandlerForGetVideosFromChannel: @escaping (_ results:[AnyObject]?, _ error: NSError?) -> Void){
         
         let parameters = [
             YouTubeClient.ParameterKeys.Part : YouTubeClient.ParameterValues.Snippet,
@@ -144,5 +144,58 @@ extension YouTubeClient {
             completionHandlerForGetVideosFromChannel(videos, nil)
             //print("We have made it!!!")
         })
+    }
+    
+    func getChannelsForSearchString(_ searchString: String, completionHandlerForGetChannelsForSearchString: @escaping (_ results:[YouTubeChannel]?, _ error: NSError?) -> Void) -> URLSessionDataTask? {
+        
+        let parameters = [
+            YouTubeClient.ParameterKeys.Part : YouTubeClient.ParameterValues.Snippet,
+            YouTubeClient.ParameterKeys.MaxResults : YouTubeClient.ParameterValues.Twentyfive,
+            YouTubeClient.ParameterKeys.Q : searchString,
+            YouTubeClient.ParameterKeys.resourceType : YouTubeClient.ParameterValues.Channel
+        ]
+        
+        let method = YouTubeClient.Methods.Search
+        
+        let task = taskForGETMethod(method, parameters as [String:AnyObject]) { (results, error) in
+            
+            func sendError(_ error: NSError) {
+                completionHandlerForGetChannelsForSearchString(nil, error)
+            }
+            
+            guard error == nil else {
+                sendError(error!)
+                return
+            }
+            
+            guard let channelBlock = results?[YouTubeClient.JSONBodyResponse.CategoryItems] as? [AnyObject] else {
+                // TODO: What happens if this fails?
+                return
+            }
+            
+            var channelArray = [YouTubeChannel]()
+            for channel in channelBlock {
+                var newChannel = YouTubeChannel()
+                let idBlock = channel[YouTubeClient.JSONBodyResponse.Id] as! [String: AnyObject]
+                newChannel.channelID = idBlock[YouTubeClient.JSONBodyResponse.ChannelId] as? String 
+                let thumbnailSnippet = channel[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject]
+                newChannel.channelTitle = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Title] as? String
+                newChannel.channelDescription = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Description] as? String
+                
+                let allThumbnails = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String:AnyObject]
+                let defaultThumbnail = allThumbnails?[YouTubeClient.JSONBodyResponse.Default] as? [String:AnyObject]
+                let defaultURL = defaultThumbnail?[YouTubeClient.JSONBodyResponse.URL] as? String
+                //print("\(defaultURL)")
+                //print("\(defaultURL)")
+                newChannel.channelThumbnailURLString = defaultURL
+                channelArray.append(newChannel)
+                //print("---------Channel id is: \(channel)")
+            }
+            
+            completionHandlerForGetChannelsForSearchString(channelArray, nil)
+        }
+        
+        return task
+        
     }
 }
