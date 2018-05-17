@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 
 
@@ -166,11 +167,11 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellResuseId = "ChannelSearchCell"
         var channel = channels[(indexPath as NSIndexPath).row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellResuseId)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellResuseId) as? SearchResultsCell
 
-        cell?.textLabel?.text = channel.channelTitle
-        cell?.detailTextLabel?.text = channel.channelDescription
-        cell?.detailTextLabel?.numberOfLines = 2
+        cell?.channelTitle?.text = channel.channelTitle
+        cell?.channelDescription?.text = channel.channelDescription
+        cell?.channelDescription?.numberOfLines = 2
 
         if channel.channelThumbnailImageData == nil {
             DispatchQueue.main.async {
@@ -178,14 +179,17 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
                 channel.channelThumbnailImageData = UIImagePNGRepresentation(image!)
 
                 performUIUpdatesOnMain {
-                    cell?.imageView?.image = image
+                    cell?.channelImage?.image = image
                 }
             }
 
         } else {
             let image = UIImage(data: (channel.channelThumbnailImageData)!)
-            cell?.imageView?.image = image
+            cell?.channelImage?.image = image
         }
+        
+//        cell?.subscribeButton.tag = indexPath.row
+//        cell?.subscribeButton.addTarget(self, action: (Selector(("subscribeToChannel"))), for: .touchUpInside)
 
         return cell!
 
@@ -199,7 +203,49 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
 //        controller.dataController = self.dataController
 //        navigationController?.pushViewController(controller, animated: true)
     }
-
+    
+    @IBAction func subscribeToChannel(sender: UIButton){
+        let buttonTag = sender.tag
+        let thisChannel = channels[buttonTag]
+        //var cdChannel = [Channel]()
+        
+        let fetchRequest:NSFetchRequest<Channel> = Channel.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "channelTitle", ascending: true)
+        fetchRequest.sortDescriptors=[sortDescriptor]
+        let predicate = NSPredicate(format: "channelTitle == %@", thisChannel.channelTitle!)
+        fetchRequest.predicate = predicate
+        
+        if let results = try? dataController.viewContext.fetch(fetchRequest) {
+            
+            guard results.count != 0 else {
+                let savedChannel = Channel(context: dataController.viewContext)
+                savedChannel.channelTitle = thisChannel.channelTitle
+                savedChannel.channelID = thisChannel.channelID
+                savedChannel.channelDescription = thisChannel.channelDescription
+                savedChannel.channelThumbnailURL = thisChannel.channelThumbnailURLString
+                savedChannel.channelThumbnailData = thisChannel.channelThumbnailImageData
+                //savedChannel.channelToCategory = thisChannel.channelToCategory
+                try? dataController.viewContext.save()
+                print("you're ready to cancel!!!")
+                return
+            }
+            if results[0].channelTitle == thisChannel.channelTitle {
+                dataController.viewContext.delete(results[0])
+                try? dataController.viewContext.save()
+                print("you're ready to subscribe!!!")
+            } else {
+                let savedChannel = Channel(context: dataController.viewContext)
+                savedChannel.channelTitle = thisChannel.channelTitle
+                savedChannel.channelID = thisChannel.channelID
+                savedChannel.channelDescription = thisChannel.channelDescription
+                savedChannel.channelThumbnailURL = thisChannel.channelThumbnailURLString
+                savedChannel.channelThumbnailData = thisChannel.channelThumbnailImageData
+                //savedChannel.channelToCategory = thisChannel.channelToCategory
+                try? dataController.viewContext.save()
+                print("you're ready to cancel!!!")
+            }
+        }
+    }
 }
 
 

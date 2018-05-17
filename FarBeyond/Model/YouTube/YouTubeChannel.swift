@@ -16,5 +16,5 @@ struct YouTubeChannel {
     var channelThumbnailURLString : String?
     var channelThumbnailImageData : Data?
     var channelToCategory : YouTubeCategory?
-    
+    var isSubscribed : String?
 }

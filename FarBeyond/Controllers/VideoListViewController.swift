@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreData
+import youtube_ios_player_helper
 
 class VideoListViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -17,10 +18,12 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
     var channel : YouTubeChannel!
     var appDelegate = UIApplication.shared.delegate as! AppDelegate
     var videos : [YouTubeVideo] = []
+    var lastVideoIdUsed : String = ""
     
     
     // MARK: Outlets
     @IBOutlet weak var videoTableView: UITableView!
+    @IBOutlet weak var videoPlayer: YTPlayerView!
     
     // MARK: Lifecycle Functions
     override func viewDidLoad() {
@@ -62,7 +65,7 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
             // TODO: we should unwrap results rather than '!'
             //var videoArray = [Video]()
             for video in results! {
-                print("The results are: \(results)")
+                //print("The results are: \(results)")
                 var newVideo = YouTubeVideo()
                 
                 if let idObject = video[YouTubeClient.JSONBodyResponse.Id] as? [String: AnyObject]{
@@ -99,6 +102,8 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
             //self.videos = videoArray
             performUIUpdatesOnMain {
                 self.videoTableView.reloadData()
+                self.lastVideoIdUsed = self.videos[0].videoID!
+                self.videoPlayer.load(withVideoId: self.lastVideoIdUsed)
             }
             //print(results as Any)
         }
@@ -161,6 +166,12 @@ extension VideoListViewController {
 //        }
         
         return cell!
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        lastVideoIdUsed = videos[(indexPath as IndexPath).row].videoID!
+        videoPlayer.load(withVideoId: lastVideoIdUsed)
+        //videoPlayer.playVideo()
     }
     
     func getDataFromUrl(url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
