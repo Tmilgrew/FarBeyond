@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FarBeyond/Controllers/VideoListViewController.swift"
-            timestampString = "548018050.651975"
+            timestampString = "548540622.70428"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "130"
@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FarBeyond/Controllers/VideoListViewController.swift"
-            timestampString = "548018050.653182"
+            timestampString = "548540622.7049479"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "59"
@@ -90,13 +90,77 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FarBeyond/Controllers/VideoListViewController.swift"
-            timestampString = "548018050.65397"
+            timestampString = "548540622.705363"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "69"
             endingLineNumber = "69"
             landmarkName = "displayVideosFromChannel(_:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FarBeyond/Controllers/HomeViewController.swift"
+            timestampString = "548571282.046949"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "328"
+            endingLineNumber = "328"
+            landmarkName = "HomeViewController"
+            landmarkType = "21">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FarBeyond/Controllers/HomeViewController.swift"
+            timestampString = "548571282.047187"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "deleteChannel(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "FarBeyond.HomeViewController.deleteChannel(__ObjC.UIButton) -&gt; ()"
+                  moduleName = "FarBeyond"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thomasmilgrew/Documents/iOSProjects/FarBeyond/FarBeyond/Controllers/HomeViewController.swift"
+                  timestampString = "548546102.2491241"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "117"
+                  endingLineNumber = "117"
+                  offsetFromSymbolStart = "3840">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in FarBeyond.HomeViewController.deleteChannel(__ObjC.UIButton) -&gt; ()"
+                  moduleName = "FarBeyond"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/thomasmilgrew/Documents/iOSProjects/FarBeyond/FarBeyond/Controllers/HomeViewController.swift"
+                  timestampString = "548546102.253242"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "118"
+                  endingLineNumber = "118"
+                  offsetFromSymbolStart = "37">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

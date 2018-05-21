@@ -10,7 +10,7 @@
 		1462F1B09AC77ED4AC700B0C /* Pods_FarBeyond.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AF2183A49E4E89277571902 /* Pods_FarBeyond.framework */; };
 		4612152920AA48D90089E47A /* SearchResultsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4612152820AA48D90089E47A /* SearchResultsCell.swift */; };
 		461FAC03209E4E7E00D6EDEA /* VideoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461FAC02209E4E7E00D6EDEA /* VideoListViewController.swift */; };
-		4636EAC420A9F02F004D3547 /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4636EAC320A9F02F004D3547 /* VideoTableViewCell.swift */; };
+		46333CA920B1E077002129EA /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46333CA820B1E077002129EA /* SectionHeaderView.swift */; };
 		463BCA5420ABD80400883B58 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463BCA5320ABD80400883B58 /* HomeViewController.swift */; };
 		463BCA5620ABD86000883B58 /* HomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463BCA5520ABD86000883B58 /* HomeCollectionViewCell.swift */; };
 		46492B5120A3BF9B00EC9FCA /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46492B5020A3BF9B00EC9FCA /* SearchViewController.swift */; };
@@ -30,6 +30,7 @@
 		4695FD9E206DAFB7002509F7 /* YouTubeConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD9D206DAFB7002509F7 /* YouTubeConstants.swift */; };
 		4695FDA0206DCBC6002509F7 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FD9F206DCBC6002509F7 /* LoginViewController.swift */; };
 		4695FDA2207069E7002509F7 /* YouTubeConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4695FDA1207069E7002509F7 /* YouTubeConvenience.swift */; };
+		4696393120B0BE4500A20AF7 /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4696393020B0BE4500A20AF7 /* VideoTableViewCell.swift */; };
 		46AF1145207DA4D4003DEDF0 /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AF1144207DA4D4003DEDF0 /* GCDBlackBox.swift */; };
 		46C71A1D2086E1C200DB5374 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 46C71A1B2086E1C200DB5374 /* Model.xcdatamodeld */; };
 		46C71A1F2088272900DB5374 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C71A1E2088272900DB5374 /* DataController.swift */; };
@@ -37,6 +38,7 @@
 		46DE4BDD20916FBB0010BE06 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DE4BDC20916FBB0010BE06 /* MainTabBarController.swift */; };
 		46DE4BDF209427CC0010BE06 /* CoreDataClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DE4BDE209427CC0010BE06 /* CoreDataClient.swift */; };
 		46E6864C207303ED002DA8B5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E6864B207303ED002DA8B5 /* User.swift */; };
+		46E7EE8620B2634200B49820 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7EE8520B2634200B49820 /* HomeTableViewCell.swift */; };
 		93717D8FDC8184C4C3F8A609 /* Pods_FarBeyondTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB6F1B6368A980330D4AC3D8 /* Pods_FarBeyondTests.framework */; };
 		D4241770E12679FEA06C289D /* Pods_FarBeyondUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DA7A17222E4A16525C06040 /* Pods_FarBeyondUITests.framework */; };
 /* End PBXBuildFile section */
@@ -65,7 +67,7 @@
 		3FA9377AE98257D9FF83A237 /* Pods-FarBeyondUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyondUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyondUITests/Pods-FarBeyondUITests.release.xcconfig"; sourceTree = "<group>"; };
 		4612152820AA48D90089E47A /* SearchResultsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsCell.swift; sourceTree = "<group>"; };
 		461FAC02209E4E7E00D6EDEA /* VideoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListViewController.swift; sourceTree = "<group>"; };
-		4636EAC320A9F02F004D3547 /* VideoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
+		46333CA820B1E077002129EA /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		463BCA5320ABD80400883B58 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		463BCA5520ABD86000883B58 /* HomeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewCell.swift; sourceTree = "<group>"; };
 		46492B5020A3BF9B00EC9FCA /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 		4695FD9D206DAFB7002509F7 /* YouTubeConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeConstants.swift; sourceTree = "<group>"; };
 		4695FD9F206DCBC6002509F7 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		4695FDA1207069E7002509F7 /* YouTubeConvenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeConvenience.swift; sourceTree = "<group>"; };
+		4696393020B0BE4500A20AF7 /* VideoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
 		46AF1144207DA4D4003DEDF0 /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
 		46C71A1C2086E1C200DB5374 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		46C71A1E2088272900DB5374 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -98,6 +101,7 @@
 		46DE4BDC20916FBB0010BE06 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		46DE4BDE209427CC0010BE06 /* CoreDataClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataClient.swift; sourceTree = "<group>"; };
 		46E6864B207303ED002DA8B5 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		46E7EE8520B2634200B49820 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 		576B57DEE4B7CAB15AC3411A /* Pods-FarBeyondUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyondUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyondUITests/Pods-FarBeyondUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		8AF2183A49E4E89277571902 /* Pods_FarBeyond.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FarBeyond.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9710BCF91E72F41903769CB8 /* Pods-FarBeyondTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyondTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyondTests/Pods-FarBeyondTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -214,9 +218,11 @@
 		4695FD8F206C6F9B002509F7 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				4636EAC320A9F02F004D3547 /* VideoTableViewCell.swift */,
 				4612152820AA48D90089E47A /* SearchResultsCell.swift */,
 				463BCA5520ABD86000883B58 /* HomeCollectionViewCell.swift */,
+				4696393020B0BE4500A20AF7 /* VideoTableViewCell.swift */,
+				46333CA820B1E077002129EA /* SectionHeaderView.swift */,
+				46E7EE8520B2634200B49820 /* HomeTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -575,10 +581,11 @@
 			files = (
 				4695FDA0206DCBC6002509F7 /* LoginViewController.swift in Sources */,
 				46DE4BDF209427CC0010BE06 /* CoreDataClient.swift in Sources */,
+				46E7EE8620B2634200B49820 /* HomeTableViewCell.swift in Sources */,
 				4695FD9E206DAFB7002509F7 /* YouTubeConstants.swift in Sources */,
-				4636EAC420A9F02F004D3547 /* VideoTableViewCell.swift in Sources */,
 				46492B5720A3C48500EC9FCA /* YouTubeCategory.swift in Sources */,
 				46DE4BDD20916FBB0010BE06 /* MainTabBarController.swift in Sources */,
+				4696393120B0BE4500A20AF7 /* VideoTableViewCell.swift in Sources */,
 				463BCA5420ABD80400883B58 /* HomeViewController.swift in Sources */,
 				4670848D2080499400484AD6 /* CategoryChannelViewController.swift in Sources */,
 				46492B5120A3BF9B00EC9FCA /* SearchViewController.swift in Sources */,
@@ -595,6 +602,7 @@
 				46AF1145207DA4D4003DEDF0 /* GCDBlackBox.swift in Sources */,
 				46492B5320A3C0F100EC9FCA /* YouTubeVideo.swift in Sources */,
 				4695FD61206C682D002509F7 /* AppDelegate.swift in Sources */,
+				46333CA920B1E077002129EA /* SectionHeaderView.swift in Sources */,
 				46C71A1D2086E1C200DB5374 /* Model.xcdatamodeld in Sources */,
 				463BCA5620ABD86000883B58 /* HomeCollectionViewCell.swift in Sources */,
 			);

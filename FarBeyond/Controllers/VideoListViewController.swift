@@ -124,11 +124,11 @@ extension VideoListViewController {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "VideoTableViewCell"
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as? VideoTableViewCell
         
         // TODO: Decorate the cell
-        cell?.textLabel?.text = videos[(indexPath as NSIndexPath).row].videoTitle
-        cell?.detailTextLabel?.text = videos[(indexPath as NSIndexPath).row].videoDescription
+        cell?.videoTitle?.text = videos[(indexPath as NSIndexPath).row].videoTitle
+        cell?.videoDescription?.text = videos[(indexPath as NSIndexPath).row].videoDescription
         cell?.detailTextLabel?.numberOfLines = 2
         
         if videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultData == nil {
@@ -142,17 +142,17 @@ extension VideoListViewController {
                 //try? self.dataController.viewContext.save()
                 
                 performUIUpdatesOnMain {
-                    cell?.imageView?.image = image
-                    cell?.textLabel?.text = self.videos[(indexPath as NSIndexPath).row].videoTitle
-                    cell?.detailTextLabel?.text = self.videos[(indexPath as NSIndexPath).row].videoDescription
+                    cell?.videoImage?.image = image
+                    cell?.videoTitle?.text = self.videos[(indexPath as NSIndexPath).row].videoTitle
+                    cell?.videoDescription?.text = self.videos[(indexPath as NSIndexPath).row].videoDescription
                     self.videoTableView.reloadData()
                 }
             }
         } else {
             let image = UIImage(data: (videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultData)! as Data)
-            cell?.imageView?.image = image
-            cell?.textLabel?.text = videos[(indexPath as NSIndexPath).row].videoTitle
-            cell?.detailTextLabel?.text = videos[(indexPath as NSIndexPath).row].videoDescription
+            cell?.videoImage?.image = image
+            cell?.videoTitle?.text = videos[(indexPath as NSIndexPath).row].videoTitle
+            cell?.videoDescription?.text = videos[(indexPath as NSIndexPath).row].videoDescription
         }
         
 //        getDataFromUrl(url: URL(string: (videos?[(indexPath as NSIndexPath).row].videoThumbnailDefaultURL)!)!) { (data, response, error) in

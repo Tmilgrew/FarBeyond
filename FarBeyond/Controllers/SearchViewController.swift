@@ -188,6 +188,7 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
             cell?.channelImage?.image = image
         }
         
+        cell?.subscribeButton.tag = (indexPath as NSIndexPath).row
 //        cell?.subscribeButton.tag = indexPath.row
 //        cell?.subscribeButton.addTarget(self, action: (Selector(("subscribeToChannel"))), for: .touchUpInside)
 
