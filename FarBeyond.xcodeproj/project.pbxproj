@@ -39,6 +39,7 @@
 		46DE4BDF209427CC0010BE06 /* CoreDataClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46DE4BDE209427CC0010BE06 /* CoreDataClient.swift */; };
 		46E6864C207303ED002DA8B5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E6864B207303ED002DA8B5 /* User.swift */; };
 		46E7EE8620B2634200B49820 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7EE8520B2634200B49820 /* HomeTableViewCell.swift */; };
+		46E7EE8820B3A94B00B49820 /* BorderedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7EE8720B3A94B00B49820 /* BorderedButton.swift */; };
 		93717D8FDC8184C4C3F8A609 /* Pods_FarBeyondTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB6F1B6368A980330D4AC3D8 /* Pods_FarBeyondTests.framework */; };
 		D4241770E12679FEA06C289D /* Pods_FarBeyondUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DA7A17222E4A16525C06040 /* Pods_FarBeyondUITests.framework */; };
 /* End PBXBuildFile section */
@@ -102,6 +103,7 @@
 		46DE4BDE209427CC0010BE06 /* CoreDataClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataClient.swift; sourceTree = "<group>"; };
 		46E6864B207303ED002DA8B5 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		46E7EE8520B2634200B49820 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
+		46E7EE8720B3A94B00B49820 /* BorderedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BorderedButton.swift; sourceTree = "<group>"; };
 		576B57DEE4B7CAB15AC3411A /* Pods-FarBeyondUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyondUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyondUITests/Pods-FarBeyondUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		8AF2183A49E4E89277571902 /* Pods_FarBeyond.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FarBeyond.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9710BCF91E72F41903769CB8 /* Pods-FarBeyondTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FarBeyondTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FarBeyondTests/Pods-FarBeyondTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 				4612152820AA48D90089E47A /* SearchResultsCell.swift */,
 				463BCA5520ABD86000883B58 /* HomeCollectionViewCell.swift */,
 				4696393020B0BE4500A20AF7 /* VideoTableViewCell.swift */,
+				46E7EE8720B3A94B00B49820 /* BorderedButton.swift */,
 				46333CA820B1E077002129EA /* SectionHeaderView.swift */,
 				46E7EE8520B2634200B49820 /* HomeTableViewCell.swift */,
 			);
@@ -590,6 +593,7 @@
 				4670848D2080499400484AD6 /* CategoryChannelViewController.swift in Sources */,
 				46492B5120A3BF9B00EC9FCA /* SearchViewController.swift in Sources */,
 				4695FD99206CE18E002509F7 /* CategoryViewController.swift in Sources */,
+				46E7EE8820B3A94B00B49820 /* BorderedButton.swift in Sources */,
 				4695FD95206C76C4002509F7 /* CategoryTableViewDelegate.swift in Sources */,
 				46E6864C207303ED002DA8B5 /* User.swift in Sources */,
 				4612152920AA48D90089E47A /* SearchResultsCell.swift in Sources */,

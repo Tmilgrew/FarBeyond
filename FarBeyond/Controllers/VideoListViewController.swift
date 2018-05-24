@@ -35,21 +35,6 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-//        let fetchRequest: NSFetchRequest<Video> = Video.fetchRequest()
-//        let predicate = NSPredicate(format: "videoToChannel == %@", channel)
-//        fetchRequest.predicate = predicate
-//        let sortDescriptor = NSSortDescriptor(key: "videoID", ascending: true)
-//        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-//        if let result = try? dataController.viewContext.fetch(fetchRequest) {
-//            if result.count == 0 {
-//                displayVideosFromChannel(channel.channelID!)
-//            } else {
-//                videos = result
-//            }
-//        }
-        
         displayVideosFromChannel(channel.channelID!)
     }
     
@@ -58,14 +43,11 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
         
         YouTubeClient.sharedInstance().getVideosFromChannel(video){(results, error) in
             guard error == nil else {
-                // TODO: Take the error and display an error message on the screen
+                self.showAlert()
                 return
             }
             
-            // TODO: we should unwrap results rather than '!'
-            //var videoArray = [Video]()
             for video in results! {
-                //print("The results are: \(results)")
                 var newVideo = YouTubeVideo()
                 
                 if let idObject = video[YouTubeClient.JSONBodyResponse.Id] as? [String: AnyObject]{
@@ -86,27 +68,33 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
                 print("-------The new Video is : \(newVideo)")
                 self.videos.append(newVideo)
                 print("--------------in loop video array: \(self.videos)")
-                //try? self.dataController.viewContext.save()
-                //videoArray.append(newVideo)
             }
             
-//            let fetchRequest : NSFetchRequest<Video> = Video.fetchRequest()
-//            let predicate = NSPredicate(format: "videoToChannel == %@", self.channel)
-//            fetchRequest.predicate = predicate
-//            let sortDescriptor = NSSortDescriptor(key: "videoID", ascending: true)
-//            fetchRequest.sortDescriptors = [sortDescriptor]
-//            if let results = try? self.dataController.viewContext.fetch(fetchRequest){
-//                self.videos = results
-//            }
             print("------------------VIdeoArray is: \(self.videos)")
-            //self.videos = videoArray
             performUIUpdatesOnMain {
                 self.videoTableView.reloadData()
                 self.lastVideoIdUsed = self.videos[0].videoID!
                 self.videoPlayer.load(withVideoId: self.lastVideoIdUsed)
             }
-            //print(results as Any)
         }
+    }
+    
+    func showAlert(){
+        let alert = UIAlertController(title: "Network Error", message: "There is an issue with your internet connection.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            switch action.style{
+            case .default:
+                print("default")
+                
+            case .cancel:
+                print("cancel")
+                
+            case .destructive:
+                print("destructive")
+                
+                
+            }}))
+        self.present(alert, animated: true, completion: nil)
     }
    
 }
@@ -132,14 +120,15 @@ extension VideoListViewController {
         cell?.detailTextLabel?.numberOfLines = 2
         
         if videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultData == nil {
-            //            cell?.imageView?.image = UIImage(named: "placeholder")
-            //            cell.activityIndicator.isHidden = false
-            //            cell.activityIndicator.startAnimating()
             
             DispatchQueue.main.async() {
-                let image = try! UIImage(data: Data(contentsOf: URL(string: (self.videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultURL)!)!))
+                
+                guard let image = try? UIImage(data: Data(contentsOf: URL(string: (self.videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultURL)!)!)) else {
+                    self.showAlert()
+                    return
+                }
+                
                 self.videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultData = UIImagePNGRepresentation(image!)
-                //try? self.dataController.viewContext.save()
                 
                 performUIUpdatesOnMain {
                     cell?.videoImage?.image = image
@@ -155,23 +144,12 @@ extension VideoListViewController {
             cell?.videoDescription?.text = videos[(indexPath as NSIndexPath).row].videoDescription
         }
         
-//        getDataFromUrl(url: URL(string: (videos?[(indexPath as NSIndexPath).row].videoThumbnailDefaultURL)!)!) { (data, response, error) in
-//            guard let data = data, error == nil else{
-//                return
-//            }
-//            performUIUpdatesOnMain {
-//                cell?.imageView?.image = UIImage(data: data)
-//                self.videoTableView.reloadData()
-//            }
-//        }
-        
         return cell!
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         lastVideoIdUsed = videos[(indexPath as IndexPath).row].videoID!
         videoPlayer.load(withVideoId: lastVideoIdUsed)
-        //videoPlayer.playVideo()
     }
     
     func getDataFromUrl(url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {

@@ -15,14 +15,13 @@ class HomeViewController : UIViewController {
     
     // MARK: Properties
     var dataController : DataController!
-    var channels : [Channel]!
+    var channels : [Channel]! = []
     var videos : [Video]!
     var lastVideoIdUsed : String = ""
-    //let itemsPerRow: CGFloat =3
     
     // MARK: Outlets
-    //@IBOutlet weak var videoCollectionView: UICollectionView!
     @IBOutlet weak var homeTableView: UITableView!
+    @IBOutlet weak var debugLabel: UILabel!
     
     @IBOutlet weak var videoPlayer: YTPlayerView!
     
@@ -33,14 +32,17 @@ class HomeViewController : UIViewController {
         super.viewDidLoad()
         homeTableView.delegate = self
         homeTableView.dataSource = self
-//        videoCollectionView.delegate = self
-//        videoCollectionView.dataSource = self
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if lastVideoIdUsed == "" {
+            debugLabel.isHidden = false
+        } else {
+            debugLabel.isHidden = true
+            videoPlayer.load(withVideoId: lastVideoIdUsed)
+        }
         
         // 1. Make a fetch request and fetch all the channels the user is subscribed to
         let fetchRequest : NSFetchRequest<Channel> = Channel.fetchRequest()
@@ -57,10 +59,10 @@ class HomeViewController : UIViewController {
                 if (channel.channelToVideo?.count == 0 || channel.channelToVideo?.count==nil) {
                     displayVideosFromChannel(channel.channelID!) {(results, error) in
                         guard error == nil else {
-                            // TODO: Take the error and display an error message on the screen
+                            self.showAlert()
                             return
                         }
-                        // TODO: we should unwrap results rather than '!'
+
                         for video in results! {
                             
                             let newVideo = Video(context: self.dataController.viewContext)
@@ -88,20 +90,12 @@ class HomeViewController : UIViewController {
             }
             homeTableView.reloadData()
         }
-        
-        
-        // 2. if the user isn't subscribed to anything, display message
-        // 3. if the user is subscribed, check for updated videos
-        // 4. Save the videos in structs
-        // 5. Display them in collection view
-    
     
     
     private func displayVideosFromChannel(_ video: String, completionHndlerForDisplayVideosFromChannel: @escaping (_ results: [AnyObject]?, _ errror: NSError?) -> Void){
         
         YouTubeClient.sharedInstance().getVideosFromChannel(video){(results, error) in
             completionHndlerForDisplayVideosFromChannel(results, error)
-            //print(results as Any)
         }
     }
     
@@ -128,15 +122,24 @@ class HomeViewController : UIViewController {
         }
     }
     
-//    func setCollectionViewDataSourceDelegate
-//        <D: UICollectionViewDataSource & UICollectionViewDelegate>
-//        (dataSourceDelegate: D, forRow row: Int) {
-//
-//        collectionView.delegate = dataSourceDelegate
-//        collectionView.dataSource = dataSourceDelegate
-//        collectionView.tag = row
-//        collectionView.reloadData()
-//    }
+    func showAlert(){
+        let alert = UIAlertController(title: "Network Error", message: "You are not connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            switch action.style{
+            case .default:
+                print("default")
+                
+            case .cancel:
+                print("cancel")
+                
+            case .destructive:
+                print("destructive")
+                
+                
+            }}))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     
 }
     
@@ -152,10 +155,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 200
     }
-    
-//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        return channels[section].channelTitle
-//    }
+
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let reuseId = "header"
@@ -169,18 +169,22 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
                     //            cell.activityIndicator.isHidden = false
                     //            cell.activityIndicator.startAnimating()
         
-                DispatchQueue.main.async(){
-                    //let backgroundPhoto = backgroundContext.object(with: photoID) as! Photo
-                    let image = try! UIImage(data: Data(contentsOf: URL(string: (channel.channelThumbnailURL)!)!))
-                    channel.channelThumbnailData = UIImagePNGRepresentation(image!)
-                    try? self.dataController.viewContext.save()
-                    //                cell.activityIndicator.isHidden = true
-                    //                cell.activityIndicator.stopAnimating()
-                    performUIUpdatesOnMain {
-                        header?.channelImage?.image = image
-                        self.homeTableView.reloadData()
-                    }
-        
+                
+                
+                    DispatchQueue.main.async(){
+                        guard let image = try? UIImage(data: Data(contentsOf: URL(string: (channel.channelThumbnailURL)!)!)) else {
+                            self.showAlert()
+                            return
+                        }
+                        channel.channelThumbnailData = UIImagePNGRepresentation(image!)
+                            try? self.dataController.viewContext.save()
+                            //                cell.activityIndicator.isHidden = true
+                            //                cell.activityIndicator.stopAnimating()
+                            performUIUpdatesOnMain {
+                                header?.channelImage?.image = image
+                                self.homeTableView.reloadData()
+                            }
+                    
                 }
             } else {
                 let image = UIImage(data: (channel.channelThumbnailData)!)
@@ -195,22 +199,13 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath) as? HomeTableViewCell
-        cell?.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, forRow: (indexPath as NSIndexPath).row)
+        cell?.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, forRow: indexPath.section)
         return cell!
     }
-    
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        guard let tableViewCell = cell as? HomeTableViewCell else {
-//            return
-//        }
-//
-//
-//    }
-    
-    
-    
-    
 }
+
+
+
 
 extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSource {
     
@@ -247,7 +242,13 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
             
             if video.videoThumbnailDefaultData == nil {
                 DispatchQueue.main.async {
-                    let image = try! UIImage(data: Data(contentsOf: URL(string: video.videoThumbnailDefaultURL!)!))
+                    
+                    guard let image = try? UIImage(data: Data(contentsOf: URL(string: (video.videoThumbnailDefaultURL)!)!)) else {
+                        self.showAlert()
+                        return
+                    }
+                    
+                    
                     video.videoThumbnailDefaultData = UIImagePNGRepresentation(image!)
                 
                     performUIUpdatesOnMain {
@@ -265,7 +266,7 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let channel = channels[indexPath.section]
+        let channel = channels[collectionView.tag]
         
         let fetchRequest : NSFetchRequest<Video> = Video.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "videoTitle", ascending: true)
@@ -289,44 +290,6 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
             }
         }
     }
-    
-    
-//     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-//        let reuseId = "SectionHeaderView"
-//        let sectionHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseId, for: indexPath) as! SectionHeaderView
-//        
-//        let channel = channels[indexPath.section]
-//        sectionHeaderView.channelTitle.text = channel.channelTitle
-//        
-//        if channel.channelThumbnailData == nil {
-//            //            cell?.imageView?.image = UIImage(named: "placeholder")
-//            //            cell.activityIndicator.isHidden = false
-//            //            cell.activityIndicator.startAnimating()
-//            
-//            DispatchQueue.main.async(){
-//                //let backgroundPhoto = backgroundContext.object(with: photoID) as! Photo
-//                let image = try! UIImage(data: Data(contentsOf: URL(string: (channel.channelThumbnailURL)!)!))
-//                channel.channelThumbnailData = UIImagePNGRepresentation(image!)
-//                try? self.dataController.viewContext.save()
-//                //                cell.activityIndicator.isHidden = true
-//                //                cell.activityIndicator.stopAnimating()
-//                performUIUpdatesOnMain {
-//                    sectionHeaderView.channelImage?.image = image
-//                    self.videoCollectionView.reloadData()
-//                }
-//                
-//            }
-//        } else {
-//            let image = UIImage(data: (channel.channelThumbnailData)!)
-//            sectionHeaderView.channelImage?.image = image
-//        }
-//        
-//        sectionHeaderView.unfollowButton.tag = indexPath.section
-//        
-//        return sectionHeaderView
-//    }
-    
-    
 }
 
 

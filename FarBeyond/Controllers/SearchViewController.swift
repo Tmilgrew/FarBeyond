@@ -90,6 +90,8 @@ extension SearchViewController : UISearchBarDelegate {
         
         // new search
         searchTask = YouTubeClient.sharedInstance().getChannelsForSearchString(searchText) { (channels, error) in
+            
+            
             self.searchTask = nil
             if let channels = channels {
                 self.channels = channels
@@ -104,53 +106,26 @@ extension SearchViewController : UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
     
+    func showAlert(){
+        let alert = UIAlertController(title: "Network Error", message: "You are not connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            switch action.style{
+            case .default:
+                print("default")
+                
+            case .cancel:
+                print("cancel")
+                
+            case .destructive:
+                print("destructive")
+                
+                
+            }}))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
 }
 
-// MARK: CollectionView Delegate Methods
-
-//extension SearchViewController : UICollectionViewDelegate, UICollectionViewDataSource{
-//
-//
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return channels.count
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cellReuseId = "ChannelSearchCell"
-//        var channel = channels[(indexPath as NSIndexPath).row]
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as! SearchResultCell
-//
-//        if channel.urlData == nil {
-//            DispatchQueue.main.async {
-//                let image = try! UIImage(data: Data(contentsOf: URL(string: channel.urlString!)!))
-//                channel.urlData = UIImagePNGRepresentation(image!)
-//
-//                performUIUpdatesOnMain {
-//                    cell.channelImage?.image = image
-//                }
-//            }
-//
-//        } else {
-//            let image = UIImage(data: (channel.urlData)!)
-//            cell.channelImage?.image = image
-//        }
-//        cell.channelTitle?.text = channel.title
-//        cell.channelDescription?.text = channel.description
-//        return cell
-//    }
-//
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//
-//        let cellsAcross: CGFloat = 3
-//        let spaceBetweenCells: CGFloat = 10
-//        let dim = (collectionView.bounds.width - (cellsAcross - 1) * spaceBetweenCells) / cellsAcross
-//        return CGSize(width: dim, height: dim)
-//    }
-//
-//
-//
-//}
 
 // MARK: TableView Delegate Methods
 
@@ -175,40 +150,31 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
 
         if channel.channelThumbnailImageData == nil {
             DispatchQueue.main.async {
-                let image = try! UIImage(data: Data(contentsOf: URL(string: channel.channelThumbnailURLString!)!))
+                guard let image = try? UIImage(data: Data(contentsOf: URL(string: channel.channelThumbnailURLString!)!)) else {
+                    self.showAlert()
+                    return
+                }
                 channel.channelThumbnailImageData = UIImagePNGRepresentation(image!)
 
                 performUIUpdatesOnMain {
                     cell?.channelImage?.image = image
                 }
             }
-
         } else {
             let image = UIImage(data: (channel.channelThumbnailImageData)!)
             cell?.channelImage?.image = image
         }
-        
         cell?.subscribeButton.tag = (indexPath as NSIndexPath).row
-//        cell?.subscribeButton.tag = indexPath.row
-//        cell?.subscribeButton.addTarget(self, action: (Selector(("subscribeToChannel"))), for: .touchUpInside)
-
         return cell!
-
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TODO: Implment this method
-//        let channel = channels[(indexPath as NSIndexPath).row]
-//        let controller = storyboard?.instantiateViewController(withIdentifier: "VideoListViewController") as! VideoListViewController
-//        controller.channel = channel
-//        controller.dataController = self.dataController
-//        navigationController?.pushViewController(controller, animated: true)
+
     }
     
     @IBAction func subscribeToChannel(sender: UIButton){
         let buttonTag = sender.tag
         let thisChannel = channels[buttonTag]
-        //var cdChannel = [Channel]()
         
         let fetchRequest:NSFetchRequest<Channel> = Channel.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "channelTitle", ascending: true)
@@ -225,7 +191,6 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
                 savedChannel.channelDescription = thisChannel.channelDescription
                 savedChannel.channelThumbnailURL = thisChannel.channelThumbnailURLString
                 savedChannel.channelThumbnailData = thisChannel.channelThumbnailImageData
-                //savedChannel.channelToCategory = thisChannel.channelToCategory
                 try? dataController.viewContext.save()
                 print("you're ready to cancel!!!")
                 return
@@ -241,7 +206,6 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
                 savedChannel.channelDescription = thisChannel.channelDescription
                 savedChannel.channelThumbnailURL = thisChannel.channelThumbnailURLString
                 savedChannel.channelThumbnailData = thisChannel.channelThumbnailImageData
-                //savedChannel.channelToCategory = thisChannel.channelToCategory
                 try? dataController.viewContext.save()
                 print("you're ready to cancel!!!")
             }
@@ -257,10 +221,3 @@ extension SearchViewController : CoreDataClient {
 }
 
 
-//extension SearchViewController: SearchCellLayoutDelegate {
-//    func collectionView(_ collectionView: UICollectionView,
-//                        heightForPhotoAtIndexPath indexPath:IndexPath) -> CGFloat {
-//
-//        return channels[indexPath.item].image.size.height
-//    }
-//}

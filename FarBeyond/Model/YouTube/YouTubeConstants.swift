@@ -18,6 +18,8 @@ extension YouTubeClient {
         static let ApiScheme = "https"
         static let ApiHost = "www.googleapis.com"
         static let ApiPath = "/youtube/v3"
+        static let clientID = "352399262689-3a1vbjcaushnsvt10hkrr4tdai5129lc.apps.googleusercontent.com"
+        static let scope1 = "https://www.googleapis.com/auth/youtube"
         
     }
     

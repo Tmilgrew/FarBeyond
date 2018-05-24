@@ -30,21 +30,6 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        
-        //let fetchRequest: NSFetchRequest<Channel> = Channel.fetchRequest()
-        //let predicate = NSPredicate(format: "channelToCategory == %@", category)
-//        fetchRequest.predicate = predicate
-//        let sortDescriptor = NSSortDescriptor(key: "channelID", ascending: true)
-//        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        //if let result = try? dataController.viewContext.fetch(fetchRequest) {
-//            if result.count == 0 {
-//                displayChannelsFromCategory(category.id!)
-//            } else {
-//                channelsFromCategory = result
-//            }
-//        }
         displayChannelsFromCategory(category.id!)
     }
     
@@ -53,16 +38,13 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
         
         YouTubeClient.sharedInstance().getChannelsFromCategory(categoryId){ (results, error) in
             guard error == nil else {
-                // TODO: Take the error and display and error message on the screen
+                self.showAlert()
                 return
             }
             
-            //var channelArray = [Channel]()
             for channel in results! {
                 var customChannel = YouTubeChannel()
                 customChannel.channelID = channel[YouTubeClient.JSONBodyResponse.Id] as? String
-                
-                
                 
                 let thumbnailSnippet = channel[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject]
                 customChannel.channelTitle = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Title] as? String
@@ -71,25 +53,12 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
                 let allThumbnails = thumbnailSnippet?[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String:AnyObject]
                 let defaultThumbnail = allThumbnails?[YouTubeClient.JSONBodyResponse.Default] as? [String:AnyObject]
                 let defaultURL = defaultThumbnail?[YouTubeClient.JSONBodyResponse.URL] as? String
-                //print("\(defaultURL)")
-                //print("\(defaultURL)")
                 customChannel.channelThumbnailURLString = defaultURL
                 customChannel.channelToCategory = self.category
-                //try? self.dataController.viewContext.save()
                 self.channelsFromCategory.append(customChannel)
             }
             
-//            let fetchRequest : NSFetchRequest<Channel> = Channel.fetchRequest()
-//            let predicate = NSPredicate(format: "channelToCategory == %@", self.category)
-//            fetchRequest.predicate = predicate
-//            let sortDescriptor = NSSortDescriptor(key: "channelID", ascending: true)
-//            fetchRequest.sortDescriptors = [sortDescriptor]
-//            if let results = try? self.dataController.viewContext.fetch(fetchRequest){
-//                self.channelsFromCategory = results
-//            }
-            
-            //self.channelsFromCategory = channelArray
-            //print("-----The results are: \(String(describing: results))")
+
             performUIUpdatesOnMain {
                 self.channelTableView.reloadData()
             }
@@ -105,12 +74,47 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
             }
         }
     }
+    
+    func showAlert(_ error: String){
+        let alert = UIAlertController(title: "Error", message: "\(error)", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            switch action.style{
+            case .default:
+                print("default")
+                
+            case .cancel:
+                print("cancel")
+                
+            case .destructive:
+                print("destructive")
+                
+                
+            }}))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func showAlert(){
+        let alert = UIAlertController(title: "Network Error", message: "You are not connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            switch action.style{
+            case .default:
+                print("default")
+                
+            case .cancel:
+                print("cancel")
+                
+            case .destructive:
+                print("destructive")
+                
+                
+            }}))
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 
 extension CategoryChannelViewController {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // TODO: Configure the number of rows based on number of categories
         return channelsFromCategory.count
     }
     
@@ -122,23 +126,20 @@ extension CategoryChannelViewController {
         let cellReuseIdentifier = "ChannelTableViewCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as? SearchResultsCell
         
-        // TODO: Decorate the cell
         cell?.channelTitle?.text = channelsFromCategory[(indexPath as NSIndexPath).row].channelTitle
         cell?.channelDescription?.text = channelsFromCategory[(indexPath as NSIndexPath).row].channelDescription
         cell?.detailTextLabel?.numberOfLines = 2
         
         if channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailImageData == nil {
-//            cell?.imageView?.image = UIImage(named: "placeholder")
-//            cell.activityIndicator.isHidden = false
-//            cell.activityIndicator.startAnimating()
             
             DispatchQueue.main.async(){
-                //let backgroundPhoto = backgroundContext.object(with: photoID) as! Photo
-                let image = try! UIImage(data: Data(contentsOf: URL(string: (self.channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailURLString)!)!))
+                guard let image = try? UIImage(data: Data(contentsOf: URL(string: (self.channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailURLString)!)!)) else {
+                    self.showAlert()
+                    return
+                }
+                
                 self.channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailImageData = UIImagePNGRepresentation(image!)
                 try? self.dataController.viewContext.save()
-//                cell.activityIndicator.isHidden = true
-//                cell.activityIndicator.stopAnimating()
                 performUIUpdatesOnMain {
                     cell?.channelImage?.image = image
                     self.channelTableView.reloadData()
@@ -149,17 +150,7 @@ extension CategoryChannelViewController {
             cell?.channelImage?.image = image
         }
         
-//        getDataFromUrl(url: URL(string: (channelsFromCategory?[(indexPath as NSIndexPath).row].channelThumbnailURL)!)!) { (data, response, error) in
-//            guard let data = data, error == nil else{
-//                return
-//            }
-//            performUIUpdatesOnMain {
-//                cell?.imageView?.image = UIImage(data: data)
-//                self.channelTableView.reloadData()
-//            }
-//        }
         cell?.subscribeButton.tag = (indexPath as NSIndexPath).row
-        
         return cell!
     }
     
@@ -172,7 +163,6 @@ extension CategoryChannelViewController {
     @IBAction func subscribeToChannel(sender: UIButton){
         let buttonTag = sender.tag
         let thisChannel = channelsFromCategory[buttonTag]
-        //var cdChannel = [Channel]()
         
         let fetchRequest:NSFetchRequest<Channel> = Channel.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "channelTitle", ascending: true)
@@ -189,7 +179,6 @@ extension CategoryChannelViewController {
                 savedChannel.channelDescription = thisChannel.channelDescription
                 savedChannel.channelThumbnailURL = thisChannel.channelThumbnailURLString
                 savedChannel.channelThumbnailData = thisChannel.channelThumbnailImageData
-                //savedChannel.channelToCategory = thisChannel.channelToCategory
                 try? dataController.viewContext.save()
                 print("you're ready to cancel!!!")
                 return
@@ -205,17 +194,9 @@ extension CategoryChannelViewController {
                 savedChannel.channelDescription = thisChannel.channelDescription
                 savedChannel.channelThumbnailURL = thisChannel.channelThumbnailURLString
                 savedChannel.channelThumbnailData = thisChannel.channelThumbnailImageData
-                //savedChannel.channelToCategory = thisChannel.channelToCategory
                 try? dataController.viewContext.save()
                 print("you're ready to cancel!!!")
             }
         }
     }
-    
-    
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let controller = storyboard!.instantiateViewController(withIdentifier: "CategoryChannelsViewController") as! CategoryChannelViewController
-//        controller.category = appDelegate.category?[(indexPath as NSIndexPath).row].id
-//        present(controller, animated: false, completion: nil)
-//    }
 }

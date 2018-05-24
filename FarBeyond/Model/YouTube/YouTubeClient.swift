@@ -17,24 +17,19 @@ class YouTubeClient : NSObject {
 
     // MARK: Properties
     // MARK: - Properties
-    //-let categoryTableViewDelegate = CategoryViewControllerDelegate()
     var appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     // shared session
     var session = URLSession.shared
     
-    // configuration object
-    //TODO: implement the configuration object below
-    //var config = TMDBConfig()
     
     func taskForGETMethod(_ method: String, _ parameters: [String:AnyObject], completionHandlerForGET: @escaping (_ result: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         var request = URLRequest(url: parseURLFromParameters(parameters, withPathExtension: method))
         request.addValue("Bearer " + GIDSignIn.sharedInstance().currentUser.authentication.accessToken, forHTTPHeaderField: "Authorization")
-        //print("\(request)")
+
         
         request.httpMethod = "GET"
-        //print("Header : \(String(describing: request.allHTTPHeaderFields))")
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in
             
@@ -66,7 +61,6 @@ class YouTubeClient : NSObject {
             
             self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET )
             
-            //print("\(String(describing: data))")
         }
         task.resume()
         return task
@@ -84,7 +78,6 @@ class YouTubeClient : NSObject {
             let queryItem = URLQueryItem(name: key, value: "\(value)")
             components.queryItems?.append(queryItem)
         }
-        //print("\(components.url)")
         return components.url!
     }
 
@@ -100,7 +93,6 @@ class YouTubeClient : NSObject {
             let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
             completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
         }
-        //print("\(parsedResult)")
         completionHandlerForConvertData(parsedResult, nil)
     }
     
