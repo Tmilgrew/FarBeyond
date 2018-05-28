@@ -125,6 +125,7 @@ extension CategoryChannelViewController {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "ChannelTableViewCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as? SearchResultsCell
+        cell?.activityIndicator.startAnimating()        
         
         cell?.channelTitle?.text = channelsFromCategory[(indexPath as NSIndexPath).row].channelTitle
         cell?.channelDescription?.text = channelsFromCategory[(indexPath as NSIndexPath).row].channelDescription
@@ -142,12 +143,16 @@ extension CategoryChannelViewController {
                 try? self.dataController.viewContext.save()
                 performUIUpdatesOnMain {
                     cell?.channelImage?.image = image
+                    cell?.activityIndicator.stopAnimating()
+                    cell?.activityIndicator.isHidden = true
                     self.channelTableView.reloadData()
                 }
             }
         } else {
             let image = UIImage(data: (channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailImageData)! as Data)
             cell?.channelImage?.image = image
+            cell?.activityIndicator.stopAnimating()
+            cell?.activityIndicator.isHidden = true
         }
         
         cell?.subscribeButton.tag = (indexPath as NSIndexPath).row

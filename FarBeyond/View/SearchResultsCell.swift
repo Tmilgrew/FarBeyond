@@ -14,6 +14,5 @@ class SearchResultsCell: UITableViewCell {
     @IBOutlet weak var channelTitle: UILabel!
     @IBOutlet weak var channelDescription: UILabel!
     @IBOutlet weak var subscribeButton: UIButton!
-    
-
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 }

@@ -143,6 +143,8 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
         let cellResuseId = "ChannelSearchCell"
         var channel = channels[(indexPath as NSIndexPath).row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellResuseId) as? SearchResultsCell
+        
+        cell?.activityIndicator.startAnimating()
 
         cell?.channelTitle?.text = channel.channelTitle
         cell?.channelDescription?.text = channel.channelDescription
@@ -158,11 +160,15 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
 
                 performUIUpdatesOnMain {
                     cell?.channelImage?.image = image
+                    cell?.activityIndicator.stopAnimating()
+                    cell?.activityIndicator.isHidden = true
                 }
             }
         } else {
             let image = UIImage(data: (channel.channelThumbnailImageData)!)
             cell?.channelImage?.image = image
+            cell?.activityIndicator.stopAnimating()
+            cell?.activityIndicator.isHidden = true
         }
         cell?.subscribeButton.tag = (indexPath as NSIndexPath).row
         return cell!

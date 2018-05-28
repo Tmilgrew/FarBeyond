@@ -221,6 +221,7 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cellReuseId = "videoCell"
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseId, for: indexPath) as? HomeCollectionViewCell
+        cell?.activityIndicator.startAnimating()
         let channel = channels[collectionView.tag]
         
         let fetchRequest : NSFetchRequest<Video> = Video.fetchRequest()
@@ -253,12 +254,16 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
                 
                     performUIUpdatesOnMain {
                         cell?.homeVideoImage?.image = image
+                        cell?.activityIndicator.stopAnimating()
+                        cell?.activityIndicator.isHidden = true
                     }
                 }
                 
             } else {
                 let image = UIImage(data: (video.videoThumbnailDefaultData)!)
                 cell?.homeVideoImage?.image = image
+                cell?.activityIndicator.stopAnimating()
+                cell?.activityIndicator.isHidden = true
             }
         }
         
@@ -285,7 +290,7 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
         
             if let lastVideoIdUsed = video.videoID {
             videoPlayer.load(withVideoId: lastVideoIdUsed)
-            }else {
+            } else {
                 print("There is no video id")
             }
         }

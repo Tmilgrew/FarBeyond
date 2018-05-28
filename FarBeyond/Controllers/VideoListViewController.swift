@@ -113,6 +113,7 @@ extension VideoListViewController {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "VideoTableViewCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as? VideoTableViewCell
+        cell?.activityIndicator.startAnimating()
         
         // TODO: Decorate the cell
         cell?.videoTitle?.text = videos[(indexPath as NSIndexPath).row].videoTitle
@@ -133,6 +134,8 @@ extension VideoListViewController {
                 performUIUpdatesOnMain {
                     cell?.videoImage?.image = image
                     cell?.videoTitle?.text = self.videos[(indexPath as NSIndexPath).row].videoTitle
+                    cell?.activityIndicator.stopAnimating()
+                    cell?.activityIndicator.isHidden = true
                     cell?.videoDescription?.text = self.videos[(indexPath as NSIndexPath).row].videoDescription
                     self.videoTableView.reloadData()
                 }
@@ -141,6 +144,8 @@ extension VideoListViewController {
             let image = UIImage(data: (videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultData)! as Data)
             cell?.videoImage?.image = image
             cell?.videoTitle?.text = videos[(indexPath as NSIndexPath).row].videoTitle
+            cell?.activityIndicator.stopAnimating()
+            cell?.activityIndicator.isHidden = true
             cell?.videoDescription?.text = videos[(indexPath as NSIndexPath).row].videoDescription
         }
         
