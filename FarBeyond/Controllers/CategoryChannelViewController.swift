@@ -20,6 +20,7 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
     
     // MARK: Outlets
     @IBOutlet weak var channelTableView: UITableView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: Lifecycle Methods
     override func viewDidLoad() {
@@ -36,9 +37,16 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
     // MARK: Helper Methods
     private func displayChannelsFromCategory(_ categoryId: String){
         
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        
         YouTubeClient.sharedInstance().getChannelsFromCategory(categoryId){ (results, error) in
             guard error == nil else {
                 self.showAlert()
+                performUIUpdatesOnMain {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                }
                 return
             }
             
@@ -60,6 +68,8 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
             
 
             performUIUpdatesOnMain {
+                self.activityIndicator.isHidden = true
+                self.activityIndicator.stopAnimating()
                 self.channelTableView.reloadData()
             }
         }

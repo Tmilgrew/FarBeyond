@@ -24,6 +24,7 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
     // MARK: Outlets
     @IBOutlet weak var videoTableView: UITableView!
     @IBOutlet weak var videoPlayer: YTPlayerView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: Lifecycle Functions
     override func viewDidLoad() {
@@ -41,9 +42,16 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
     // MARK: Helper Methods
     private func displayVideosFromChannel(_ video: String){
         
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        
         YouTubeClient.sharedInstance().getVideosFromChannel(video){(results, error) in
             guard error == nil else {
                 self.showAlert()
+                performUIUpdatesOnMain {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                }
                 return
             }
             
@@ -73,8 +81,10 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
             print("------------------VIdeoArray is: \(self.videos)")
             performUIUpdatesOnMain {
                 self.videoTableView.reloadData()
-                self.lastVideoIdUsed = self.videos[0].videoID!
+                self.lastVideoIdUsed = self.videos[0].videoID ?? ""
                 self.videoPlayer.load(withVideoId: self.lastVideoIdUsed)
+                self.activityIndicator.isHidden = true
+                self.activityIndicator.stopAnimating()
             }
         }
     }

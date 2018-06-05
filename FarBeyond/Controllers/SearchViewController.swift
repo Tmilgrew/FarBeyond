@@ -27,6 +27,7 @@ class SearchViewController : UIViewController {
     
     @IBOutlet weak var channelSearchBar: UISearchBar!
     @IBOutlet weak var channelTableView: UITableView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: Life Cycle
     
@@ -41,6 +42,11 @@ class SearchViewController : UIViewController {
         channelSearchBar.delegate = self
         channelTableView.delegate = self
         channelTableView.dataSource = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        activityIndicator.isHidden = true
     }
     
     // MARK: Dismissals
@@ -85,18 +91,27 @@ extension SearchViewController : UISearchBarDelegate {
         if searchText == "" {
             channels = [YouTubeChannel]()
             channelTableView.reloadData()
+            activityIndicator.isHidden = true
+            activityIndicator.stopAnimating()
             return
         }
+        
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
         
         // new search
         searchTask = YouTubeClient.sharedInstance().getChannelsForSearchString(searchText) { (channels, error) in
             
+            self.channels = [YouTubeChannel]()
             
             self.searchTask = nil
             if let channels = channels {
                 self.channels = channels
                 performUIUpdatesOnMain {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
                     self.channelTableView.reloadData()
+                    
                 }
             }
         }

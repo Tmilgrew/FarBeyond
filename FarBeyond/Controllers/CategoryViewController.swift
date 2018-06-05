@@ -23,6 +23,7 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: - Outlets
     @IBOutlet weak var categoryTableView: UITableView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,10 +57,18 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func callGetCategories(){
+        
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        
         YouTubeClient.sharedInstance().getCategories(){(results, error) in
             
             guard error == nil else {
                 self.showAlert()
+                performUIUpdatesOnMain {
+                    self.activityIndicator.isHidden = true
+                    self.activityIndicator.stopAnimating()
+                }
                 return
             }
 
@@ -76,6 +85,8 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
 
             performUIUpdatesOnMain {
                 self.categoryTableView.reloadData()
+                self.activityIndicator.isHidden = true
+                self.activityIndicator.stopAnimating()
             }
         }
     }
