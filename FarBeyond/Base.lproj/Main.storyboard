@@ -856,7 +856,7 @@
                                                                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="elO-qM-ILv" customClass="BorderedButton" customModule="FarBeyond" customModuleProvider="target">
                                                                             <rect key="frame" x="221" y="16.666666666666668" width="30" height="24.000000000000004"/>
                                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                                                            <state key="normal" title="GET">
+                                                                            <state key="normal">
                                                                                 <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             </state>
                                                                             <connections>

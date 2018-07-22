@@ -14,7 +14,7 @@ import youtube_ios_player_helper
 class HomeViewController : UIViewController {
     
     // MARK: Properties
-    var dataController : DataController!
+    //var dataController : DataController!
     var channels : [Channel]! = []
     var videos : [Video]!
     var lastVideoIdUsed : String = ""
@@ -44,15 +44,18 @@ class HomeViewController : UIViewController {
             videoPlayer.load(withVideoId: lastVideoIdUsed)
         }
         
-        // 1. Make a fetch request and fetch all the channels the user is subscribed to
-        let fetchRequest : NSFetchRequest<Channel> = Channel.fetchRequest()
-        let sortDescriptor = NSSortDescriptor(key:"channelTitle", ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        // 1. Make a http request and GET all the channels the user is subscribed to
+        YouTubeClient.sharedInstance().getChannels()
         
-        if let results = try?dataController.viewContext.fetch(fetchRequest) {
-            guard results.count != 0 else {
-                return
-            }
+        
+//        let fetchRequest : NSFetchRequest<Channel> = Channel.fetchRequest()
+//        let sortDescriptor = NSSortDescriptor(key:"channelTitle", ascending: true)
+//        fetchRequest.sortDescriptors = [sortDescriptor]
+//
+//        if let results = try?dataController.viewContext.fetch(fetchRequest) {
+//            guard results.count != 0 else {
+//                return
+//            }
             channels = results
             
             for channel in channels {

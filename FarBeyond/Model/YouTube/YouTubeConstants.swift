@@ -28,6 +28,7 @@ extension YouTubeClient {
         static let GuideCategories = "/guideCategories"
         static let Channels = "/channels"
         static let Search = "/search"
+        static let Subscribe = "/subscriptions"
     
     }
     
@@ -64,6 +65,19 @@ extension YouTubeClient {
         static let Thumbnails = "thumbnails"
         static let VideoId = "videoId"
         static let ChannelId = "channelId"
+    }
+    
+    // MARK: JSON Body Keys
+    struct JSONBodyKey {
+        static let Snippet = "snippet"
+        static let ResourceId = "resourceId"
+        static let Kind = "kind"
+        static let channelId = "channelId"
+    }
+    
+    // MARK: JSON Body Value
+    struct JSONBodyValue {
+        static let YoutubeChannel = "youtube#channel"
     }
     
 

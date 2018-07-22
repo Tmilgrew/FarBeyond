@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 //    var user: User!
 //    var category: [Category]?
-//    var channelsFromCategory: [Channel]?
+    var subscribedChannels: [YouTubeChannel] = []
 //    var accessToken : String!
     let dataController = DataController(modelName: "Model")
     

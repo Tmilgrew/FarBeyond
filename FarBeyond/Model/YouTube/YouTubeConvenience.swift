@@ -43,6 +43,10 @@ extension YouTubeClient {
         
     }
     
+    func getChannels(){
+        
+    }
+    
     func getChannelsFromCategory(_ category: String, completionHandlerForGetChannelsFromCategory: @escaping (_ results:[AnyObject]?, _ error: NSError?) -> Void){
         
         let parameters = [
@@ -151,5 +155,49 @@ extension YouTubeClient {
         
         return task
         
+    }
+    
+    
+    
+    func sendSubscribeRequest(_ channel: YouTubeChannel, completionHandlerForSendSubscribeRequest: @escaping (_ results:YouTubeChannel?, _ error: NSError?) -> Void){
+        let parameters = [YouTubeClient.ParameterKeys.Part : YouTubeClient.ParameterValues.Snippet]
+        let jsonBody = "{\"\(YouTubeClient.JSONBodyKey.Snippet)\": {\"\(YouTubeClient.JSONBodyKey.ResourceId)\": {\"\(YouTubeClient.JSONBodyKey.Kind)\": \"\(YouTubeClient.JSONBodyValue.YoutubeChannel)\", \"\(YouTubeClient.JSONBodyKey.channelId)\": \"\(channel.channelID as! String)\"}}}"
+        
+        let method = YouTubeClient.Methods.Subscribe
+        
+        let task = taskForPOSTMethod(method, parameters: parameters as [String : AnyObject], jsonBody: jsonBody) { (result, error) in
+            
+            func sendError(_ error: NSError) {
+                completionHandlerForSendSubscribeRequest(nil, error)
+            }
+            
+            guard let result = result else {
+                return
+            }
+            
+            print(result)
+            
+            guard let channelBlock = result[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] else {
+                return
+            }
+            
+            print(channelBlock)
+            
+            var newChannel = YouTubeChannel()
+            newChannel.channelDescription = channelBlock[YouTubeClient.JSONBodyResponse.Description] as? String
+            newChannel.channelID = channelBlock[YouTubeClient.JSONBodyResponse.ChannelId] as? String
+            newChannel.channelTitle = channelBlock[YouTubeClient.JSONBodyResponse.Title] as? String
+            
+            guard let thumbnailBlock = channelBlock[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String:AnyObject] else{
+                return
+            }
+            guard let defaultThumbnail = thumbnailBlock[YouTubeClient.JSONBodyResponse.Default] as? [String:AnyObject] else {
+                return
+            }
+            
+            newChannel.channelThumbnailURLString = defaultThumbnail[YouTubeClient.JSONBodyResponse.URL] as? String
+            
+            completionHandlerForSendSubscribeRequest(newChannel, nil)
+        }
     }
 }
