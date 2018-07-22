@@ -29,7 +29,6 @@ extension YouTubeClient {
         static let Channels = "/channels"
         static let Search = "/search"
         static let Subscribe = "/subscriptions"
-    
     }
     
     // MARK: Youtube guideCategories & search Parameter Keys
@@ -42,6 +41,7 @@ extension YouTubeClient {
         static let ChannelId = "channelId"
         static let Q = "q"
         static let resourceType = "type"
+        static let Mine = "mine"
         
     }
     
@@ -51,6 +51,7 @@ extension YouTubeClient {
         static let USRegionCode = "us"
         static let Twentyfive = "25"
         static let Channel = "channel"
+        static let ContentDetails = "contentDetails"
     }
     
     // MARK: JSON Body Response Constants

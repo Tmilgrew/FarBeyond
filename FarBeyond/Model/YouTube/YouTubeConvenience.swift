@@ -43,7 +43,29 @@ extension YouTubeClient {
         
     }
     
-    func getChannels(){
+    func getChannels(completionHandlerForGetChannels: @escaping (_ results:[YouTubeChannel]?, _ error: NSError?) -> Void){
+        
+        let parameters : [String: AnyObject] = [
+            YouTubeClient.ParameterKeys.Part : "\(YouTubeClient.ParameterValues.Snippet),\(YouTubeClient.ParameterValues.ContentDetails)" as AnyObject,
+            YouTubeClient.ParameterKeys.Mine : true as AnyObject,
+        ]
+        
+        let method = YouTubeClient.Methods.Subscribe
+        
+        let task = taskForGETMethod(method, parameters) { (results, error) in
+            
+            func sendError(_ error: NSError){
+                completionHandlerForGetChannels(nil, error)
+            }
+            
+            guard error == nil else {
+                sendError(error!)
+                return
+            }
+            
+            print(results)
+            
+        }
         
     }
     
