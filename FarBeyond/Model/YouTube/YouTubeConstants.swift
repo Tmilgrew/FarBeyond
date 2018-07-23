@@ -66,6 +66,7 @@ extension YouTubeClient {
         static let Thumbnails = "thumbnails"
         static let VideoId = "videoId"
         static let ChannelId = "channelId"
+        static let ResourceId = "resourceId"
     }
     
     // MARK: JSON Body Keys

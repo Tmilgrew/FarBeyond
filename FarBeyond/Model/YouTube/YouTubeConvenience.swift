@@ -45,10 +45,11 @@ extension YouTubeClient {
     
     func getChannels(completionHandlerForGetChannels: @escaping (_ results:[YouTubeChannel]?, _ error: NSError?) -> Void){
         
-        let parameters : [String: AnyObject] = [
+        let parameters = [
             YouTubeClient.ParameterKeys.Part : "\(YouTubeClient.ParameterValues.Snippet),\(YouTubeClient.ParameterValues.ContentDetails)" as AnyObject,
-            YouTubeClient.ParameterKeys.Mine : true as AnyObject,
-        ]
+            YouTubeClient.ParameterKeys.Mine : "true",
+            YouTubeClient.ParameterKeys.MaxResults : 20
+            ] as [String : AnyObject]
         
         let method = YouTubeClient.Methods.Subscribe
         
@@ -58,15 +59,64 @@ extension YouTubeClient {
                 completionHandlerForGetChannels(nil, error)
             }
             
+            
             guard error == nil else {
                 sendError(error!)
                 return
             }
             
+            guard let results = results as? [String:AnyObject] else {
+                print("****ERROR: Results did not equal results.  Issue at getChannels().")
+                return
+            }
+            
             print(results)
             
-        }
+            guard let allSubscribedChannels = results[YouTubeClient.JSONBodyResponse.CategoryItems] as? [AnyObject] else {
+                print("****ERROR: Problem parsing JSON.  Issue at allSubscribedChannels.****")
+                return
+            }
+            
+            var subscribedChannelsArray = [YouTubeChannel]()
+            
+            for singleSubscribedChannel in allSubscribedChannels {
+                
+                guard let snippet = singleSubscribedChannel[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] else {
+                    return
+                }
+                
+                //print("**** TEST - THE SNIPPET READS: \(snippet)")
+                
+                var singleChannel = YouTubeChannel()
+                //singleChannel.channelID = snippet[YouTubeClient.JSONBodyResponse.ChannelId] as? String
+                singleChannel.channelDescription = snippet[YouTubeClient.JSONBodyResponse.Description] as? String
+                singleChannel.channelTitle = snippet[YouTubeClient.JSONBodyResponse.Title] as? String
+                
+                guard let resourceID = snippet[YouTubeClient.JSONBodyResponse.ResourceId] as? [String:AnyObject] else {
+                    return
+                }
+                
+                singleChannel.channelID = resourceID[YouTubeClient.JSONBodyResponse.ChannelId] as? String
+            
+                guard let thumbnails = snippet[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String:AnyObject] else {
+                    print("-----------------We missed the thumbnails.")
+                    return
+                }
+                
+                guard let defaultThumbnail = thumbnails[YouTubeClient.JSONBodyResponse.Default] as? [String:AnyObject] else {
+                    return
+                }
+                
+                singleChannel.channelThumbnailURLString = defaultThumbnail[YouTubeClient.JSONBodyResponse.URL] as? String
+                
+                subscribedChannelsArray.append(singleChannel)
+            
+                
+            
+            }
+            completionHandlerForGetChannels(subscribedChannelsArray,nil)
         
+        }
     }
     
     func getChannelsFromCategory(_ category: String, completionHandlerForGetChannelsFromCategory: @escaping (_ results:[AnyObject]?, _ error: NSError?) -> Void){
@@ -106,6 +156,8 @@ extension YouTubeClient {
             YouTubeClient.ParameterKeys.ChannelId : channel
         ]
         
+        //print("****TEST - THE CHANNEL ID IS: \(channel)")
+        
         let method = YouTubeClient.Methods.Search
         
         _ = taskForGETMethod(method, parameters as [String:AnyObject], completionHandlerForGET: { (results, error) in
@@ -119,11 +171,15 @@ extension YouTubeClient {
                 return
             }
             
+            //print("****TEST - VIDEO RESULTS ARE: \(results)")
+            
             // TODO: Change variable CategoryItems to just an 'items' name.  This is not fetching just categories.
             guard let videos = results?[YouTubeClient.JSONBodyResponse.CategoryItems] as? [AnyObject] else {
                 // TODO: What happens if this fails?
                 return
             }
+            
+            
             
             completionHandlerForGetVideosFromChannel(videos, nil)
         })

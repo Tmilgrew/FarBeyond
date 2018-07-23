@@ -45,8 +45,6 @@ class YouTubeClient : NSObject {
                 return
             }
             
-            
-            
             /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
                 sendError("Your request returned a status code other than 2xx! -----\(String(describing: (response as? HTTPURLResponse)?.statusCode))")
@@ -122,6 +120,8 @@ class YouTubeClient : NSObject {
             let queryItem = URLQueryItem(name: key, value: "\(value)")
             components.queryItems?.append(queryItem)
         }
+        
+        print(components.url)
         return components.url!
     }
 
