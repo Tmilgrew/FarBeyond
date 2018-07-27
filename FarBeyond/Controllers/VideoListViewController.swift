@@ -55,30 +55,34 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
                 return
             }
             
-            for video in results! {
-                var newVideo = YouTubeVideo()
-                
-                if let idObject = video[YouTubeClient.JSONBodyResponse.Id] as? [String: AnyObject]{
-                    newVideo.videoID = idObject[YouTubeClient.JSONBodyResponse.VideoId] as? String
-                }
-                
-                if let snippet = video[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] {
-                    newVideo.videoDescription = snippet[YouTubeClient.JSONBodyResponse.Description] as? String
-                    newVideo.videoTitle = snippet[YouTubeClient.JSONBodyResponse.Title] as? String
-                    
-                    if let thumbnails = snippet[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String: AnyObject] {
-                        if let defaultURL = thumbnails[YouTubeClient.JSONBodyResponse.Default] as? [String: AnyObject] {
-                            newVideo.videoThumbnailDefaultURL = defaultURL[YouTubeClient.JSONBodyResponse.URL] as? String
-                        }
-                    }
-                }
-                newVideo.videoToChannel = self.channel
-                print("-------The new Video is : \(newVideo)")
-                self.videos.append(newVideo)
-                print("--------------in loop video array: \(self.videos)")
+            guard let results = results else {
+                return
             }
+            self.channel.videosForChannel = results
+//            for video in results {
+//                //var newVideo = YouTubeVideo()
+//
+////                if let idObject = video[YouTubeClient.JSONBodyResponse.Id] as? [String: AnyObject]{
+////                    newVideo.videoID = idObject[YouTubeClient.JSONBodyResponse.VideoId] as? String
+////                }
+//
+////                if let snippet = video[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] {
+////                    newVideo.videoDescription = snippet[YouTubeClient.JSONBodyResponse.Description] as? String
+////                    newVideo.videoTitle = snippet[YouTubeClient.JSONBodyResponse.Title] as? String
+////
+////                    if let thumbnails = snippet[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String: AnyObject] {
+////                        if let defaultURL = thumbnails[YouTubeClient.JSONBodyResponse.Default] as? [String: AnyObject] {
+////                            newVideo.videoThumbnailDefaultURL = defaultURL[YouTubeClient.JSONBodyResponse.URL] as? String
+////                        }
+////                    }
+////                }
+//                newVideo.videoToChannel = self.channel
+//                print("-------The new Video is : \(newVideo)")
+//                self.videos.append(newVideo)
+//                print("--------------in loop video array: \(self.videos)")
+//            }
             
-            print("------------------VIdeoArray is: \(self.videos)")
+            //print("------------------VIdeoArray is: \(self.videos)")
             performUIUpdatesOnMain {
                 self.videoTableView.reloadData()
                 self.lastVideoIdUsed = self.videos[0].videoID ?? ""

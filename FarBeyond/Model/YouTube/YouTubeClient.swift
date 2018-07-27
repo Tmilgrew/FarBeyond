@@ -45,6 +45,8 @@ class YouTubeClient : NSObject {
                 return
             }
             
+            self.convertDataWithCompletionHandler(data!, completionHandlerForConvertData: completionHandlerForGET )
+            
             /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
                 sendError("Your request returned a status code other than 2xx! -----\(String(describing: (response as? HTTPURLResponse)?.statusCode))")
@@ -57,7 +59,7 @@ class YouTubeClient : NSObject {
                 return
             }
             
-            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET )
+            //self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET )
             
         }
         task.resume()
@@ -121,7 +123,7 @@ class YouTubeClient : NSObject {
             components.queryItems?.append(queryItem)
         }
         
-        print(components.url)
+        //print(components.url)
         return components.url!
     }
 
@@ -138,6 +140,7 @@ class YouTubeClient : NSObject {
             completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
         }
         
+        print(parsedResult)
         completionHandlerForConvertData(parsedResult, nil)
     }
     

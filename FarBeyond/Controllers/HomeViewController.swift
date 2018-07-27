@@ -46,96 +46,41 @@ class HomeViewController : UIViewController {
         }
         
         // 1. Make a http request and GET all the channels the user is subscribed to
-        YouTubeClient.sharedInstance().getChannels(){ (results, error) in
+        YouTubeClient.sharedInstance().getChannels(){ (channels, error) in
             
             guard error == nil else {
                 self.showAlert()
                 return
             }
             
-            guard let results = results else {
+            guard let channels = channels else {
                 return
             }
             
-            self.appDelegate.subscribedChannels = results
+            //var channelsToUpdate = [YouTubeChannel]()
+            for var channel in channels {
+                YouTubeClient.sharedInstance().getVideosFromChannel(channel.channelID!, completionHandlerForGetVideosFromChannel: { (videos, error) in
+                    
+                    guard let videos = videos else  {
+                        return
+                    }
+                    
+                    channel.videosForChannel = videos
+                    self.appDelegate.subscribedChannels.append(channel)
+                    print("TEST - TESTING SUBSCRIBEDCHANNELS RESULTS: \(self.appDelegate.subscribedChannels)")
+                })
+            }
             
+            
+            //self.appDelegate.subscribedChannels = channelsToUpdate
             performUIUpdatesOnMain {
                 self.homeTableView.reloadData()
             }
-            
-            for var channel in results {
-                
-                var channelVideos = [YouTubeVideo]()
-                
-                
-                
-                
-            }
-            
-            
-            
-            //self.appDelegate.subscribedChannels = results
-            
-            
-            
-            
-            
-            
-            
         }
-        
-        
     }
-        
-        
-//        let fetchRequest : NSFetchRequest<Channel> = Channel.fetchRequest()
-//        let sortDescriptor = NSSortDescriptor(key:"channelTitle", ascending: true)
-//        fetchRequest.sortDescriptors = [sortDescriptor]
-//
-//        if let results = try?dataController.viewContext.fetch(fetchRequest) {
-//            guard results.count != 0 else {
-//                return
-//            }
-            //channels = results
-            
-//            for channel in channels {
-//                if (channel.channelToVideo?.count == 0 || channel.channelToVideo?.count==nil) {
-////                    displayVideosFromChannel(channel.channelID!) {(results, error) in
-//////                        guard error == nil else {
-//////                            self.showAlert()
-//////                            return
-//////                        }
-////
-//////                        for video in results! {
-//////
-//////                            let newVideo = Video(context: self.dataController.viewContext)
-//////
-//////                            if let idObject = video[YouTubeClient.JSONBodyResponse.Id] as? [String: AnyObject]{
-//////                                newVideo.videoID = idObject[YouTubeClient.JSONBodyResponse.VideoId] as? String
-//////                            }
-//////
-//////                            if let snippet = video[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] {
-//////                                newVideo.videoDescription = snippet[YouTubeClient.JSONBodyResponse.Description] as? String
-//////                                newVideo.videoTitle = snippet[YouTubeClient.JSONBodyResponse.Title] as? String
-//////
-//////                                if let thumbnails = snippet[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String: AnyObject] {
-//////                                    if let defaultURL = thumbnails[YouTubeClient.JSONBodyResponse.Default] as? [String: AnyObject] {
-//////                                        newVideo.videoThumbnailDefaultURL = defaultURL[YouTubeClient.JSONBodyResponse.URL] as? String
-//////                                    }
-//////                                }
-//////                            }
-//////                            newVideo.videoToChannel = channel
-//////                            try? self.dataController.viewContext.save()
-//////                        }
-////                    }
-//                }
-//                }
-//    }
-        
-        
     
     
-    private func displayVideosFromChannel(_ video: String, completionHndlerForDisplayVideosFromChannel: @escaping (_ results: [AnyObject]?, _ errror: NSError?) -> Void){
+    private func displayVideosFromChannel(_ video: String, completionHndlerForDisplayVideosFromChannel: @escaping (_ results: [YouTubeVideo]?, _ errror: NSError?) -> Void){
         
         YouTubeClient.sharedInstance().getVideosFromChannel(video){(results, error) in
             completionHndlerForDisplayVideosFromChannel(results, error)
@@ -147,6 +92,19 @@ class HomeViewController : UIViewController {
     @IBAction func deleteChannel(_ sender: UIButton) {
         let buttonTag = sender.tag
         let thisChannel = appDelegate.subscribedChannels[buttonTag]
+        
+        YouTubeClient.sharedInstance().deleteChannel(thisChannel.channelTitle!) { (result, error) in
+            guard error == nil else {
+                self.showAlert()
+                return
+            }
+            
+            print(result)
+            self.appDelegate.subscribedChannels.remove(at: buttonTag)
+            performUIUpdatesOnMain {
+                self.homeTableView.reloadData()
+            }
+        }
         
 //        let fetchRequest:NSFetchRequest<Channel> = Channel.fetchRequest()
 //        let sortDescriptor = NSSortDescriptor(key: "channelTitle", ascending: true)
@@ -267,54 +225,12 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
         cell?.activityIndicator.startAnimating()
         
         var channel = appDelegate.subscribedChannels[collectionView.tag]
-        //let videos = appDelegate.subscribedChannels[collectionView.tag].videosForChannel
+        var video = channel.videosForChannel?[(indexPath as NSIndexPath).row]
         
-        if channel.videosForChannel == nil {
-            
-            YouTubeClient.sharedInstance().getVideosFromChannel(channel.channelID!, completionHandlerForGetVideosFromChannel: { (results, error) in
-                
-                guard let results = results else  {
-                    return
-                }
-                
-                for result in results {
-                    //print("TEST - HERE IS THE DATA FROM A SINGLE VIDOE: \(result)")
-                    
-                    guard let id = result[YouTubeClient.JSONBodyResponse.Id] as? [String:AnyObject] else {
-                        return
-                    }
-                    guard let snippet = result[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] else {
-                        return
-                    }
-                    guard let thumbnails = snippet[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String:AnyObject] else {
-                        return
-                    }
-                    guard let defautThumbnail = thumbnails[YouTubeClient.JSONBodyResponse.Default] as? [String:AnyObject] else {
-                        return
-                    }
-                    var video = YouTubeVideo()
-                    video.videoID = id[YouTubeClient.JSONBodyResponse.VideoId] as? String
-                    video.videoDescription = snippet[YouTubeClient.JSONBodyResponse.Description] as? String
-                    video.videoTitle = snippet[YouTubeClient.JSONBodyResponse.Title] as? String
-                    video.videoThumbnailDefaultURL = defautThumbnail[YouTubeClient.JSONBodyResponse.URL] as? String
-                    //print("TEST - THE VIDEO OBJECT IS: \(video)")
-                    channel.videosForChannel?.append(video)
-                    
-                    //channel.videosForChannel?.append(video)
-                    
-                }
-                //channel.videosForChannel = channelVideos
-                
-                //self.appDelegate.subscribedChannels.append(channel)
-                //print("TEST - TESTING SUBSCRIBEDCHANNELS RESULTS: \(self.appDelegate.subscribedChannels)")
-                
-                
-                
-                performUIUpdatesOnMain {
-                    collectionView.reloadItems(at: [indexPath])
-                }
-            })
-        }
+//        if channel.videosForChannel == nil {
+//
+//            print("There were no videos for channel: \(String(describing: channel.channelTitle))")
+//        }
         
         //var video = videos?[(indexPath as NSIndexPath).row]
         cell?.homeVideoTitle.text = video?.videoTitle
@@ -389,3 +305,53 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
 //        self.dataController = stack
 //    }
 //}
+
+
+
+
+
+
+
+//        let fetchRequest : NSFetchRequest<Channel> = Channel.fetchRequest()
+//        let sortDescriptor = NSSortDescriptor(key:"channelTitle", ascending: true)
+//        fetchRequest.sortDescriptors = [sortDescriptor]
+//
+//        if let results = try?dataController.viewContext.fetch(fetchRequest) {
+//            guard results.count != 0 else {
+//                return
+//            }
+//channels = results
+
+//            for channel in channels {
+//                if (channel.channelToVideo?.count == 0 || channel.channelToVideo?.count==nil) {
+////                    displayVideosFromChannel(channel.channelID!) {(results, error) in
+//////                        guard error == nil else {
+//////                            self.showAlert()
+//////                            return
+//////                        }
+////
+//////                        for video in results! {
+//////
+//////                            let newVideo = Video(context: self.dataController.viewContext)
+//////
+//////                            if let idObject = video[YouTubeClient.JSONBodyResponse.Id] as? [String: AnyObject]{
+//////                                newVideo.videoID = idObject[YouTubeClient.JSONBodyResponse.VideoId] as? String
+//////                            }
+//////
+//////                            if let snippet = video[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] {
+//////                                newVideo.videoDescription = snippet[YouTubeClient.JSONBodyResponse.Description] as? String
+//////                                newVideo.videoTitle = snippet[YouTubeClient.JSONBodyResponse.Title] as? String
+//////
+//////                                if let thumbnails = snippet[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String: AnyObject] {
+//////                                    if let defaultURL = thumbnails[YouTubeClient.JSONBodyResponse.Default] as? [String: AnyObject] {
+//////                                        newVideo.videoThumbnailDefaultURL = defaultURL[YouTubeClient.JSONBodyResponse.URL] as? String
+//////                                    }
+//////                                }
+//////                            }
+//////                            newVideo.videoToChannel = channel
+//////                            try? self.dataController.viewContext.save()
+//////                        }
+////                    }
+//                }
+//                }
+//    }
