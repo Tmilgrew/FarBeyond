@@ -12,6 +12,7 @@ struct YouTubeChannel {
     
     var channelTitle : String?
     var channelID : String?
+    var subscriptionID : String?
     var channelDescription : String?
     var channelThumbnailURLString : String?
     var channelThumbnailImageData : Data?

@@ -42,6 +42,7 @@ extension YouTubeClient {
         static let Q = "q"
         static let resourceType = "type"
         static let Mine = "mine"
+        static let Id = "id"
         
     }
     
@@ -49,6 +50,7 @@ extension YouTubeClient {
     struct ParameterValues{
         static let Snippet = "snippet"
         static let USRegionCode = "us"
+        static let Fifteen = "15"
         static let Twentyfive = "25"
         static let Channel = "channel"
         static let ContentDetails = "contentDetails"

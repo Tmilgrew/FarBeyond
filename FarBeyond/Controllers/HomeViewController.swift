@@ -46,36 +46,54 @@ class HomeViewController : UIViewController {
         }
         
         // 1. Make a http request and GET all the channels the user is subscribed to
-        YouTubeClient.sharedInstance().getChannels(){ (channels, error) in
-            
-            guard error == nil else {
-                self.showAlert()
-                return
+        if appDelegate.subscribedChannels.count == 0 {
+        
+            YouTubeClient.sharedInstance().getChannels(){ (channels, error) in
+                
+                guard error == nil else {
+                    self.showAlert()
+                    return
+                }
+                
+                guard let channels = channels else {
+                    return
+                }
+                
+                self.appDelegate.subscribedChannels = channels
+                
+                //var channelsToUpdate = [YouTubeChannel]()
+                //var i = 0
+                for (i, channel) in self.appDelegate.subscribedChannels.enumerated() {
+                    YouTubeClient.sharedInstance().getVideosFromChannel(channel.channelID!, completionHandlerForGetVideosFromChannel: { (videos, error) in
+                        
+                        guard let videos = videos else  {
+                            return
+                        }
+                        
+                        self.appDelegate.subscribedChannels[i].videosForChannel = videos
+                        //self.appDelegate.subscribedChannels[i].videosForChannel = videos
+                        
+                        if i == (self.appDelegate.subscribedChannels.count - 1) {
+                            performUIUpdatesOnMain {
+                                self.homeTableView.reloadData()
+                            }
+                        }
+                        
+                            
+                        
+                        //self.appDelegate.subscribedChannels.append(channel)
+                        //print("TEST - TESTING SUBSCRIBEDCHANNELS RESULTS: \(self.appDelegate.subscribedChannels)")
+                    })
+                }
+                
+                
+                //self.appDelegate.subscribedChannels = channelsToUpdate
+                performUIUpdatesOnMain {
+                    self.homeTableView.reloadData()
+                }
             }
-            
-            guard let channels = channels else {
-                return
-            }
-            
-            //var channelsToUpdate = [YouTubeChannel]()
-            for var channel in channels {
-                YouTubeClient.sharedInstance().getVideosFromChannel(channel.channelID!, completionHandlerForGetVideosFromChannel: { (videos, error) in
-                    
-                    guard let videos = videos else  {
-                        return
-                    }
-                    
-                    channel.videosForChannel = videos
-                    self.appDelegate.subscribedChannels.append(channel)
-                    print("TEST - TESTING SUBSCRIBEDCHANNELS RESULTS: \(self.appDelegate.subscribedChannels)")
-                })
-            }
-            
-            
-            //self.appDelegate.subscribedChannels = channelsToUpdate
-            performUIUpdatesOnMain {
-                self.homeTableView.reloadData()
-            }
+        } else {
+            homeTableView.reloadData()
         }
     }
     
@@ -93,34 +111,20 @@ class HomeViewController : UIViewController {
         let buttonTag = sender.tag
         let thisChannel = appDelegate.subscribedChannels[buttonTag]
         
-        YouTubeClient.sharedInstance().deleteChannel(thisChannel.channelTitle!) { (result, error) in
+        //print("\(thisChannel.subscriptionID)")
+        
+        YouTubeClient.sharedInstance().deleteChannel(thisChannel.subscriptionID!) { (result, error) in
             guard error == nil else {
                 self.showAlert()
                 return
             }
             
-            print(result)
+//            print(result)
             self.appDelegate.subscribedChannels.remove(at: buttonTag)
             performUIUpdatesOnMain {
                 self.homeTableView.reloadData()
             }
         }
-        
-//        let fetchRequest:NSFetchRequest<Channel> = Channel.fetchRequest()
-//        let sortDescriptor = NSSortDescriptor(key: "channelTitle", ascending: true)
-//        fetchRequest.sortDescriptors=[sortDescriptor]
-//        let predicate = NSPredicate(format: "channelTitle == %@", thisChannel.channelTitle!)
-//        fetchRequest.predicate = predicate
-//
-//        if let results = try? dataController.viewContext.fetch(fetchRequest) {
-//            dataController.viewContext.delete(results[0])
-//            try? dataController.viewContext.save()
-//
-//            performUIUpdatesOnMain {
-//                self.channels.remove(at: buttonTag)
-//                self.homeTableView.reloadData()
-//            }
-//        }
     }
     
     func showAlert(){
@@ -178,7 +182,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
                         self.showAlert()
                         return
                     }
-                    channel.channelThumbnailImageData = UIImagePNGRepresentation(image!)
+                    self.appDelegate.subscribedChannels[section].channelThumbnailImageData = UIImagePNGRepresentation(image!)
                             //try? self.dataController.viewContext.save()
                             //                cell.activityIndicator.isHidden = true
                             //                cell.activityIndicator.stopAnimating()
@@ -188,7 +192,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
                     }
                 }
             } else {
-                let image = UIImage(data: (channel.channelThumbnailImageData)!)
+                let image = UIImage(data: (appDelegate.subscribedChannels[section].channelThumbnailImageData)!)
                 header?.channelImage?.image = image
             }
         
@@ -227,34 +231,27 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
         var channel = appDelegate.subscribedChannels[collectionView.tag]
         var video = channel.videosForChannel?[(indexPath as NSIndexPath).row]
         
-//        if channel.videosForChannel == nil {
-//
-//            print("There were no videos for channel: \(String(describing: channel.channelTitle))")
-//        }
-        
-        //var video = videos?[(indexPath as NSIndexPath).row]
         cell?.homeVideoTitle.text = video?.videoTitle
         cell?.homeVideoDescription.text = video?.videoDescription
             
         if video?.videoThumbnailDefaultData == nil {
+            cell?.homeVideoImage.image = nil
             DispatchQueue.main.async {
                     
                 guard let image = try? UIImage(data: Data(contentsOf: URL(string: (video?.videoThumbnailDefaultURL)!)!)) else {
                     self.showAlert()
                     return
                 }
-                    
-                    
-                video?.videoThumbnailDefaultData = UIImagePNGRepresentation(image!)
+                
+                self.appDelegate.subscribedChannels[collectionView.tag].videosForChannel?[(indexPath as NSIndexPath).row].videoThumbnailDefaultData = UIImagePNGRepresentation(image!)
                 
                 performUIUpdatesOnMain {
-                    collectionView.reloadData()
                     cell?.homeVideoImage?.image = image
+                    //collectionView.reloadData()
                     cell?.activityIndicator.stopAnimating()
                     cell?.activityIndicator.isHidden = true
                 }
             }
-                
         } else {
             let image = UIImage(data: (video?.videoThumbnailDefaultData)!)
             cell?.homeVideoImage?.image = image

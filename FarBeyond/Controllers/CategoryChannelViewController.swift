@@ -188,7 +188,7 @@ extension CategoryChannelViewController {
                 return
             }
             
-            self.appDelegate.subscribedChannels.append(result!)
+            //self.appDelegate.subscribedChannels.append(result!)
             performUIUpdatesOnMain {
                 // TODO: We need to correctly set the button text.  Get/Got.
                 // Bug Known: Repeats in list for items not 'Got'

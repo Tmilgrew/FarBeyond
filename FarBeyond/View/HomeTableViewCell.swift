@@ -22,4 +22,6 @@ class HomeTableViewCell: UITableViewCell {
         videoCollectionView.tag = row
         videoCollectionView.reloadData()
     }
+    
+    
 }

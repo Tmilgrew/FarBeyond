@@ -197,38 +197,18 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
         let buttonTag = sender.tag
         let thisChannel = channels[buttonTag]
         
-        let fetchRequest:NSFetchRequest<Channel> = Channel.fetchRequest()
-        let sortDescriptor = NSSortDescriptor(key: "channelTitle", ascending: true)
-        fetchRequest.sortDescriptors=[sortDescriptor]
-        let predicate = NSPredicate(format: "channelTitle == %@", thisChannel.channelTitle!)
-        fetchRequest.predicate = predicate
-        
-        if let results = try? dataController.viewContext.fetch(fetchRequest) {
+        YouTubeClient.sharedInstance().sendSubscribeRequest(thisChannel) { (result, error) in
             
-            guard results.count != 0 else {
-                let savedChannel = Channel(context: dataController.viewContext)
-                savedChannel.channelTitle = thisChannel.channelTitle
-                savedChannel.channelID = thisChannel.channelID
-                savedChannel.channelDescription = thisChannel.channelDescription
-                savedChannel.channelThumbnailURL = thisChannel.channelThumbnailURLString
-                savedChannel.channelThumbnailData = thisChannel.channelThumbnailImageData
-                try? dataController.viewContext.save()
-                print("you're ready to cancel!!!")
+            guard error == nil else {
+                self.showAlert()
                 return
             }
-            if results[0].channelTitle == thisChannel.channelTitle {
-                dataController.viewContext.delete(results[0])
-                try? dataController.viewContext.save()
-                print("you're ready to subscribe!!!")
-            } else {
-                let savedChannel = Channel(context: dataController.viewContext)
-                savedChannel.channelTitle = thisChannel.channelTitle
-                savedChannel.channelID = thisChannel.channelID
-                savedChannel.channelDescription = thisChannel.channelDescription
-                savedChannel.channelThumbnailURL = thisChannel.channelThumbnailURLString
-                savedChannel.channelThumbnailData = thisChannel.channelThumbnailImageData
-                try? dataController.viewContext.save()
-                print("you're ready to cancel!!!")
+            
+            //self.appDelegate.subscribedChannels.append(result!)
+            performUIUpdatesOnMain {
+                // TODO: We need to correctly set the button text.  Get/Got.
+                // Bug Known: Repeats in list for items not 'Got'
+                sender.setTitle("GOT", for: .normal)
             }
         }
     }

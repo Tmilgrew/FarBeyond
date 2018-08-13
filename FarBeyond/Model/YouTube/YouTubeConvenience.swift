@@ -81,13 +81,15 @@ extension YouTubeClient {
             
             for singleSubscribedChannel in allSubscribedChannels {
                 
+                var singleChannel = YouTubeChannel()
+                singleChannel.subscriptionID = singleSubscribedChannel[YouTubeClient.JSONBodyResponse.Id] as? String
+
                 guard let snippet = singleSubscribedChannel[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] else {
                     return
                 }
                 
-                //print("**** TEST - THE SNIPPET READS: \(snippet)")
+                print("**** TEST - THE SNIPPET READS: \(snippet)")
                 
-                var singleChannel = YouTubeChannel()
                 //singleChannel.channelID = snippet[YouTubeClient.JSONBodyResponse.ChannelId] as? String
                 singleChannel.channelDescription = snippet[YouTubeClient.JSONBodyResponse.Description] as? String
                 singleChannel.channelTitle = snippet[YouTubeClient.JSONBodyResponse.Title] as? String
@@ -152,7 +154,7 @@ extension YouTubeClient {
         
         let parameters = [
             YouTubeClient.ParameterKeys.Part : YouTubeClient.ParameterValues.Snippet,
-            YouTubeClient.ParameterKeys.MaxResults : YouTubeClient.ParameterValues.Twentyfive,
+            YouTubeClient.ParameterKeys.MaxResults : YouTubeClient.ParameterValues.Fifteen,
             YouTubeClient.ParameterKeys.ChannelId : channel
         ]
         
@@ -265,10 +267,11 @@ extension YouTubeClient {
     }
     
     func deleteChannel(_ channel: String, completionHandlerForDeleteChannel: @escaping (_ result:AnyObject?, _ error: NSError?) -> Void){
-        let parameters = [YouTubeClient.ParameterKeys.ChannelId:channel]
+        let parameters = [YouTubeClient.ParameterKeys.Id:channel,
+                          YouTubeClient.ParameterKeys.Part:YouTubeClient.ParameterValues.Snippet]
         let method = YouTubeClient.Methods.Subscribe
         
-        let task = taskForGETMethod(method, parameters as [String:AnyObject]) { (results, error) in
+        let task = taskForDELETEMethod(method, parameters as [String:AnyObject]) { (results, error) in
             func sendError(_ error: NSError) {
                 completionHandlerForDeleteChannel(nil, error)
             }
@@ -278,11 +281,11 @@ extension YouTubeClient {
                 return
             }
             
-            guard let results = results else {
-                return
-            }
-            
-            print(results)
+//            guard let results = results else {
+//                return
+//            }
+//
+//            print(results)
             completionHandlerForDeleteChannel("Channel Deleted" as AnyObject, nil)
         }
     }
@@ -291,8 +294,9 @@ extension YouTubeClient {
     
     func sendSubscribeRequest(_ channel: YouTubeChannel, completionHandlerForSendSubscribeRequest: @escaping (_ results:YouTubeChannel?, _ error: NSError?) -> Void){
         let parameters = [YouTubeClient.ParameterKeys.Part : YouTubeClient.ParameterValues.Snippet]
-        let jsonBody = "{\"\(YouTubeClient.JSONBodyKey.Snippet)\": {\"\(YouTubeClient.JSONBodyKey.ResourceId)\": {\"\(YouTubeClient.JSONBodyKey.Kind)\": \"\(YouTubeClient.JSONBodyValue.YoutubeChannel)\", \"\(YouTubeClient.JSONBodyKey.channelId)\": \"\(String(describing: channel.channelID))\"}}}"
+        let jsonBody = "{\"\(YouTubeClient.JSONBodyKey.Snippet)\": {\"\(YouTubeClient.JSONBodyKey.ResourceId)\": {\"\(YouTubeClient.JSONBodyKey.Kind)\": \"\(YouTubeClient.JSONBodyValue.YoutubeChannel)\", \"\(YouTubeClient.JSONBodyKey.channelId)\": \"\(channel.channelID ?? "0"))\"}}}"
         
+        print("The jsonBody is:  \(jsonBody)")
         let method = YouTubeClient.Methods.Subscribe
         
         let task = taskForPOSTMethod(method, parameters: parameters as [String : AnyObject], jsonBody: jsonBody) { (result, error) in
@@ -301,19 +305,25 @@ extension YouTubeClient {
                 completionHandlerForSendSubscribeRequest(nil, error)
             }
             
+            var newChannel = YouTubeChannel()
+
+            
+            print("The real result is \(result)")
+            
             guard let result = result else {
                 return
             }
             
-            print(result)
+            print("The result is:  \(result)")
+            
+            newChannel.subscriptionID = result[YouTubeClient.JSONBodyResponse.Id] as? String
             
             guard let channelBlock = result[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] else {
                 return
             }
             
-            print(channelBlock)
+            print("The channelBlock is:  \(channelBlock)")
             
-            var newChannel = YouTubeChannel()
             newChannel.channelDescription = channelBlock[YouTubeClient.JSONBodyResponse.Description] as? String
             newChannel.channelID = channelBlock[YouTubeClient.JSONBodyResponse.ChannelId] as? String
             newChannel.channelTitle = channelBlock[YouTubeClient.JSONBodyResponse.Title] as? String

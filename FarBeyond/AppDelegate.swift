@@ -17,10 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //    var category: [Category]?
     var subscribedChannels: [YouTubeChannel] = []
 //    var accessToken : String!
-    let dataController = DataController(modelName: "Model")
+    //let dataController = DataController(modelName: "Model")
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        dataController.load()
+        //dataController.load()
         
         // If the the 'authenticated' value is set up in UserDefaults continue forward,
         // otherwise go to else statement

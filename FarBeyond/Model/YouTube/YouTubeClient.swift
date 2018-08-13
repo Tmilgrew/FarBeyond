@@ -45,7 +45,7 @@ class YouTubeClient : NSObject {
                 return
             }
             
-            self.convertDataWithCompletionHandler(data!, completionHandlerForConvertData: completionHandlerForGET )
+//            self.convertDataWithCompletionHandler(data!, completionHandlerForConvertData: completionHandlerForGET )
             
             /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
@@ -59,12 +59,50 @@ class YouTubeClient : NSObject {
                 return
             }
             
-            //self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET )
+            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET )
             
         }
         task.resume()
         return task
     }
+    
+    func taskForDELETEMethod(_ method: String, _ parameters: [String:AnyObject], completionHandlerForDELETE: @escaping (_ result: AnyObject?, _ error: NSError?)-> Void) -> URLSessionDataTask
+    {
+        var request = URLRequest(url: parseURLFromParameters(parameters, withPathExtension: method))
+        request.addValue("Bearer " + GIDSignIn.sharedInstance().currentUser.authentication.accessToken, forHTTPHeaderField: "Authorization")
+        request.httpMethod = "DELETE"
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) {(data, response, error) in
+            
+            func sendError(_ error: String) {
+                print(error)
+                let userInfo = [NSLocalizedDescriptionKey : error]
+                completionHandlerForDELETE(nil, NSError(domain: "taskForGETMethod", code: 1, userInfo: userInfo))
+            }
+            
+            /* Was there an error? */
+            guard error == nil else {
+                sendError("There was an error with your request: \(error!)")
+                return
+            }
+            
+            //self.convertDataWithCompletionHandler(data!, completionHandlerForConvertData: completionHandlerForDELETE)
+
+            
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode == 204 else {
+                sendError("Your request returned a status code other than 204! -----\(String(describing: (response as? HTTPURLResponse)?.statusCode))")
+                return
+            }
+            
+            /* If successful, there will not be any data returned, so we do not need to check for data.  Just that the repsonse code is 204. */
+            completionHandlerForDELETE(nil, nil)
+            
+        }
+        task.resume()
+        return task
+    }
+    
     
     func taskForPOSTMethod(_ method: String, parameters: [String:AnyObject], jsonBody: String, completionHandlerForPOST: @escaping (_ result: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
@@ -90,6 +128,8 @@ class YouTubeClient : NSObject {
                 sendError("There was an error with your request: \(error!)")
                 return
             }
+            
+            //self.convertDataWithCompletionHandler(data!, completionHandlerForConvertData: completionHandlerForPOST)
             
             /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
