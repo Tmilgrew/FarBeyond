@@ -30,15 +30,15 @@ class CategoryViewController: UIViewController, UITableViewDelegate, UITableView
         
         // Inject the dataController into all viewControllers in the MainTabBarController
         //*************************************************************************************
-        if let tab = self.tabBarController as? MainTabBarController {
-            for child in (tab.viewControllers as? [UINavigationController]) ?? []
-            {
-                let viewController = child.viewControllers.first
-                if let top = viewController as? CoreDataClient {
-                    top.setStack(stack: appDelegate.dataController)
-                }
-            }
-        }
+//        if let tab = self.tabBarController as? MainTabBarController {
+//            for child in (tab.viewControllers as? [UINavigationController]) ?? []
+//            {
+//                let viewController = child.viewControllers.first
+//                if let top = viewController as? CoreDataClient {
+//                    top.setStack(stack: appDelegate.dataController)
+//                }
+//            }
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

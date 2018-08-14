@@ -73,7 +73,6 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
                 self.channelTableView.reloadData()
             }
         }
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -165,6 +164,11 @@ extension CategoryChannelViewController {
             cell?.activityIndicator.isHidden = true
         }
         
+        if appDelegate.subscribedChannels.contains(channelsFromCategory[(indexPath as NSIndexPath).row]) {
+            cell?.subscribeButton.setTitle("GOT", for: .normal)
+        } else {
+            cell?.subscribeButton.setTitle("GET", for: .normal)
+        }
         cell?.subscribeButton.tag = (indexPath as NSIndexPath).row
         return cell!
     }

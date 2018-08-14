@@ -8,7 +8,9 @@
 
 import Foundation
 
-struct YouTubeChannel {
+struct YouTubeChannel:Equatable {
+    
+    
     
     var channelTitle : String?
     var channelID : String?
@@ -19,4 +21,11 @@ struct YouTubeChannel {
     var channelToCategory : YouTubeCategory?
     var isSubscribed : String?
     var videosForChannel : [YouTubeVideo]?
+    
+    //===============================================================================================
+    // MARK: A function that allows us to see if the channel is contained within an array of channels
+    //===============================================================================================
+    static func == (lhs: YouTubeChannel, rhs: YouTubeChannel) -> Bool {
+        return lhs.channelID == rhs.channelID
+    }
 }

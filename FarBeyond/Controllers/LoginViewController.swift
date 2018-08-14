@@ -53,7 +53,40 @@ class LoginViewController : UIViewController, GIDSignInDelegate, GIDSignInUIDele
         if let error = error {
             print("\(error.localizedDescription)")
         } else {
-            performSegue(withIdentifier: "segueToContent", sender: self)
+            YouTubeClient.sharedInstance().getChannels(){ (channels, error) in
+                
+                guard error == nil else {
+                    self.showAlert()
+                    return
+                }
+                
+                guard let channels = channels else {
+                    return
+                }
+                
+                self.appDelegate.subscribedChannels = channels
+                
+                //var channelsToUpdate = [YouTubeChannel]()
+                //var i = 0
+                for (i, channel) in self.appDelegate.subscribedChannels.enumerated() {
+                    YouTubeClient.sharedInstance().getVideosFromChannel(channel.channelID!, completionHandlerForGetVideosFromChannel: { (videos, error) in
+                        
+                        guard let videos = videos else  {
+                            return
+                        }
+                        
+                        self.appDelegate.subscribedChannels[i].videosForChannel = videos
+                        //self.appDelegate.subscribedChannels[i].videosForChannel = videos
+                        
+                        if i == (self.appDelegate.subscribedChannels.count - 1) {
+                            performUIUpdatesOnMain {
+                                self.performSegue(withIdentifier: "segueToContent", sender: self)
+                                
+                            }
+                        }
+                    })
+                }
+            }
         }
     }
     
@@ -61,6 +94,24 @@ class LoginViewController : UIViewController, GIDSignInDelegate, GIDSignInUIDele
               withError error: Error!) {
         // Perform any operations when the user disconnects from app here.
         // ...
+    }
+    
+    func showAlert(){
+        let alert = UIAlertController(title: "Network Error", message: "You are not connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            switch action.style{
+            case .default:
+                print("default")
+                
+            case .cancel:
+                print("cancel")
+                
+            case .destructive:
+                print("destructive")
+                
+                
+            }}))
+        self.present(alert, animated: true, completion: nil)
     }
     
     
