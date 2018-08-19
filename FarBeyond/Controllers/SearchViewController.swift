@@ -18,8 +18,8 @@ class SearchViewController : UIViewController {
     
     // data for the table
     var channels = [YouTubeChannel]()
-    var dataController: DataController!
-    
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
+
     // the most recent data download task. We keep a reference to it so that it can be canceled every time the search text changes
     var searchTask: URLSessionDataTask?
     
@@ -57,12 +57,12 @@ class SearchViewController : UIViewController {
     
     // MARK: Segues
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "pushToVideos"{
-            if let controller = segue.destination as? VideoListViewController {
-                controller.channel = channels[(channelTableView.indexPathForSelectedRow! as NSIndexPath).row]
-                controller.dataController = self.dataController
-            }
-        }
+//        if segue.identifier == "pushToVideos"{
+//            if let controller = segue.destination as? VideoListViewController {
+//                controller.channel = channels[(channelTableView.indexPathForSelectedRow! as NSIndexPath).row]
+//                controller.dataController = self.dataController
+//            }
+//        }
     }
 }
 
@@ -185,6 +185,14 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
             cell?.activityIndicator.stopAnimating()
             cell?.activityIndicator.isHidden = true
         }
+        
+        if appDelegate.subscribedChannels.contains(channels[(indexPath as NSIndexPath).row]) {
+            cell?.subscribeButton.setTitle("GOT", for: .normal)
+            cell?.subscribeButton.backgroundColor = UIColor.lightGray
+        } else {
+            cell?.subscribeButton.setTitle("GET", for: .normal)
+            cell?.subscribeButton.backgroundColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
+        }
         cell?.subscribeButton.tag = (indexPath as NSIndexPath).row
         return cell!
     }
@@ -204,10 +212,16 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
                 return
             }
             
+            if let result = result {
+                self.appDelegate.subscribedChannels.append(result)
+            }
+            
             //self.appDelegate.subscribedChannels.append(result!)
             performUIUpdatesOnMain {
                 // TODO: We need to correctly set the button text.  Get/Got.
                 // Bug Known: Repeats in list for items not 'Got'
+                let indexPath = [IndexPath(row: (sender.tag), section: 0)]
+                self.channelTableView.reloadRows(at: indexPath, with: UITableViewRowAnimation.automatic)
                 sender.setTitle("GOT", for: .normal)
             }
         }
@@ -215,10 +229,10 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
 }
 
 
-extension SearchViewController : CoreDataClient {
-    func setStack(stack: DataController) { 
-        self.dataController = stack
-    }
-}
+//extension SearchViewController : CoreDataClient {
+//    func setStack(stack: DataController) { 
+//        self.dataController = stack
+//    }
+//}
 
 

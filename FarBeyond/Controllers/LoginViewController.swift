@@ -66,8 +66,6 @@ class LoginViewController : UIViewController, GIDSignInDelegate, GIDSignInUIDele
                 
                 self.appDelegate.subscribedChannels = channels
                 
-                //var channelsToUpdate = [YouTubeChannel]()
-                //var i = 0
                 for (i, channel) in self.appDelegate.subscribedChannels.enumerated() {
                     YouTubeClient.sharedInstance().getVideosFromChannel(channel.channelID!, completionHandlerForGetVideosFromChannel: { (videos, error) in
                         
@@ -76,7 +74,6 @@ class LoginViewController : UIViewController, GIDSignInDelegate, GIDSignInUIDele
                         }
                         
                         self.appDelegate.subscribedChannels[i].videosForChannel = videos
-                        //self.appDelegate.subscribedChannels[i].videosForChannel = videos
                         
                         if i == (self.appDelegate.subscribedChannels.count - 1) {
                             performUIUpdatesOnMain {

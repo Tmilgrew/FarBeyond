@@ -43,6 +43,8 @@ extension YouTubeClient {
         static let resourceType = "type"
         static let Mine = "mine"
         static let Id = "id"
+        static let Order = "order"
+        static let PageToken = "pageToken"
         
     }
     
@@ -54,6 +56,7 @@ extension YouTubeClient {
         static let Twentyfive = "25"
         static let Channel = "channel"
         static let ContentDetails = "contentDetails"
+        static let Date = "date"
     }
     
     // MARK: JSON Body Response Constants
@@ -69,6 +72,10 @@ extension YouTubeClient {
         static let VideoId = "videoId"
         static let ChannelId = "channelId"
         static let ResourceId = "resourceId"
+        static let PageInfo = "pageInfo"
+        static let ResultsPerPage = "resultsPerPage"
+        static let TotalResults = "totalResults"
+        static let NextPageToken = "nextPageToken"
     }
     
     // MARK: JSON Body Keys

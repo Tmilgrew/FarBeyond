@@ -93,6 +93,31 @@ class HomeViewController : UIViewController {
                 }
             }
         } else {
+            
+            for (i, channel) in self.appDelegate.subscribedChannels.enumerated() {
+                if channel.videosForChannel == nil {
+                    YouTubeClient.sharedInstance().getVideosFromChannel(channel.channelID!, completionHandlerForGetVideosFromChannel: { (videos, error) in
+                        
+                        guard let videos = videos else  {
+                            return
+                        }
+                        
+                        self.appDelegate.subscribedChannels[i].videosForChannel = videos
+                        //self.appDelegate.subscribedChannels[i].videosForChannel = videos
+                        
+                        if i == (self.appDelegate.subscribedChannels.count - 1) {
+                            performUIUpdatesOnMain {
+                                self.homeTableView.reloadData()
+                            }
+                        }
+                        
+                        
+                        
+                        //self.appDelegate.subscribedChannels.append(channel)
+                        //print("TEST - TESTING SUBSCRIBEDCHANNELS RESULTS: \(self.appDelegate.subscribedChannels)")
+                    })
+                }
+            }
             homeTableView.reloadData()
         }
     }
@@ -262,7 +287,33 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
         return cell!
     }
         
-    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        var channel = appDelegate.subscribedChannels[collectionView.tag]
+        //let video = channel.videosForChannel?[(indexPath as NSIndexPath).row]
+            
+        
+
+        
+
+        if let videoCount = channel.videosForChannel?.count, let video = channel.videosForChannel?[(indexPath as NSIndexPath).row] {
+            if indexPath.row == videoCount - 1 {
+                if videoCount < video.totalResults! {
+                    // TODO: Call get videos method with next page token
+                    YouTubeClient.sharedInstance().getMoreVideos(channel.channelID, video.nextPageToken) { (videoArray, error) in
+                        
+                        if let videos = videoArray {
+                            performUIUpdatesOnMain {
+                                self.appDelegate.subscribedChannels[collectionView.tag].videosForChannel = self.appDelegate.subscribedChannels[collectionView.tag].videosForChannel! + videos
+                                collectionView.reloadData()
+                            }
+                        }
+                        
+                    }
+                }
+            }
+        }
+        
+    }
 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

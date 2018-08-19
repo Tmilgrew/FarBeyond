@@ -31,7 +31,9 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        displayChannelsFromCategory(category.id!)
+        if channelsFromCategory.count == 0 {
+            displayChannelsFromCategory(category.id!)
+        }
     }
     
     // MARK: Helper Methods
@@ -166,8 +168,10 @@ extension CategoryChannelViewController {
         
         if appDelegate.subscribedChannels.contains(channelsFromCategory[(indexPath as NSIndexPath).row]) {
             cell?.subscribeButton.setTitle("GOT", for: .normal)
+            cell?.subscribeButton.backgroundColor = UIColor.lightGray
         } else {
             cell?.subscribeButton.setTitle("GET", for: .normal)
+            cell?.subscribeButton.backgroundColor = UIColor(red: 0.0, green:0.502, blue:0.839, alpha: 1.0)
         }
         cell?.subscribeButton.tag = (indexPath as NSIndexPath).row
         return cell!
@@ -184,7 +188,6 @@ extension CategoryChannelViewController {
         let thisChannel = channelsFromCategory[buttonTag]
         
         
-        
         YouTubeClient.sharedInstance().sendSubscribeRequest(thisChannel) { (result, error) in
             
             guard error == nil else {
@@ -192,10 +195,16 @@ extension CategoryChannelViewController {
                 return
             }
             
-            //self.appDelegate.subscribedChannels.append(result!)
+            if let result = result {
+                self.appDelegate.subscribedChannels.append(result)
+            }
+            
+            
             performUIUpdatesOnMain {
                 // TODO: We need to correctly set the button text.  Get/Got.
                 // Bug Known: Repeats in list for items not 'Got'
+                let indexPath = [IndexPath(row: (sender.tag), section: 0)]
+                self.channelTableView.reloadRows(at: indexPath, with: UITableViewRowAnimation.automatic)
                 sender.setTitle("GOT", for: .normal)
             }
         }
