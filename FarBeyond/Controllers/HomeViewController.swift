@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import CoreData
 import youtube_ios_player_helper
+import SDWebImage
 
 class HomeViewController : UIViewController {
     
@@ -194,32 +195,37 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         let reuseId = "header"
         let header = tableView.dequeueReusableCell(withIdentifier: reuseId) as? SectionHeaderView
         
-        var channel = appDelegate.subscribedChannels[section]
+        let channel = appDelegate.subscribedChannels[section]
         header?.channelTitle?.text = channel.channelTitle
         
-            if channel.channelThumbnailImageData == nil {
-                    //            cell?.imageView?.image = UIImage(named: "placeholder")
-                    //            cell.activityIndicator.isHidden = false
-                    //            cell.activityIndicator.startAnimating()
+        if let imageURLString = channel.channelThumbnailURLString  {
+            let imageURL = URL(string: imageURLString)
+            header?.channelImage?.sd_setImage(with: imageURL, placeholderImage: UIImage(named: "placeholder"))
+        }
         
-                DispatchQueue.main.async(){
-                    guard let image = try? UIImage(data: Data(contentsOf: URL(string: (channel.channelThumbnailURLString)!)!)) else {
-                        self.showAlert()
-                        return
-                    }
-                    self.appDelegate.subscribedChannels[section].channelThumbnailImageData = UIImagePNGRepresentation(image!)
-                            //try? self.dataController.viewContext.save()
-                            //                cell.activityIndicator.isHidden = true
-                            //                cell.activityIndicator.stopAnimating()
-                    performUIUpdatesOnMain {
-                        header?.channelImage?.image = image
-                        self.homeTableView.reloadData()
-                    }
-                }
-            } else {
-                let image = UIImage(data: (appDelegate.subscribedChannels[section].channelThumbnailImageData)!)
-                header?.channelImage?.image = image
-            }
+//            if channel.channelThumbnailImageData == nil {
+//                    //            cell?.imageView?.image = UIImage(named: "placeholder")
+//                    //            cell.activityIndicator.isHidden = false
+//                    //            cell.activityIndicator.startAnimating()
+//
+//                DispatchQueue.main.async(){
+//                    guard let image = try? UIImage(data: Data(contentsOf: URL(string: (channel.channelThumbnailURLString)!)!)) else {
+//                        self.showAlert()
+//                        return
+//                    }
+//                    self.appDelegate.subscribedChannels[section].channelThumbnailImageData = UIImagePNGRepresentation(image!)
+//                            //try? self.dataController.viewContext.save()
+//                            //                cell.activityIndicator.isHidden = true
+//                            //                cell.activityIndicator.stopAnimating()
+//                    performUIUpdatesOnMain {
+//                        header?.channelImage?.image = image
+//                        self.homeTableView.reloadData()
+//                    }
+//                }
+//            } else {
+//                let image = UIImage(data: (appDelegate.subscribedChannels[section].channelThumbnailImageData)!)
+//                header?.channelImage?.image = image
+//            }
         
         header?.unfollowButton?.tag = section
         
@@ -254,35 +260,41 @@ extension HomeViewController : UICollectionViewDelegate, UICollectionViewDataSou
         cell?.activityIndicator.startAnimating()
         
         var channel = appDelegate.subscribedChannels[collectionView.tag]
-        var video = channel.videosForChannel?[(indexPath as NSIndexPath).row]
+        let video = channel.videosForChannel?[(indexPath as NSIndexPath).row]
         
         cell?.homeVideoTitle.text = video?.videoTitle
         cell?.homeVideoDescription.text = video?.videoDescription
+        
+        if let imageURLString = video?.videoThumbnailDefaultURL  {
+            let imageURL = URL(string: imageURLString)
+            cell?.homeVideoImage?.sd_setImage(with: imageURL, placeholderImage: UIImage(named: "placeholder"))
             
-        if video?.videoThumbnailDefaultData == nil {
-            cell?.homeVideoImage.image = nil
-            DispatchQueue.main.async {
-                    
-                guard let image = try? UIImage(data: Data(contentsOf: URL(string: (video?.videoThumbnailDefaultURL)!)!)) else {
-                    self.showAlert()
-                    return
-                }
-                
-                self.appDelegate.subscribedChannels[collectionView.tag].videosForChannel?[(indexPath as NSIndexPath).row].videoThumbnailDefaultData = UIImagePNGRepresentation(image!)
-                
-                performUIUpdatesOnMain {
-                    cell?.homeVideoImage?.image = image
-                    //collectionView.reloadData()
-                    cell?.activityIndicator.stopAnimating()
-                    cell?.activityIndicator.isHidden = true
-                }
-            }
-        } else {
-            let image = UIImage(data: (video?.videoThumbnailDefaultData)!)
-            cell?.homeVideoImage?.image = image
-            cell?.activityIndicator.stopAnimating()
-            cell?.activityIndicator.isHidden = true
         }
+            
+//        if video?.videoThumbnailDefaultData == nil { 
+//            cell?.homeVideoImage.image = nil
+//            DispatchQueue.main.async {
+//
+//                guard let image = try? UIImage(data: Data(contentsOf: URL(string: (video?.videoThumbnailDefaultURL)!)!)) else {
+//                    self.showAlert()
+//                    return
+//                }
+//
+//                self.appDelegate.subscribedChannels[collectionView.tag].videosForChannel?[(indexPath as NSIndexPath).row].videoThumbnailDefaultData = UIImagePNGRepresentation(image!)
+//
+//                performUIUpdatesOnMain {
+//                    cell?.homeVideoImage?.image = image
+//                    //collectionView.reloadData()
+//                    cell?.activityIndicator.stopAnimating()
+//                    cell?.activityIndicator.isHidden = true
+//                }
+//            }
+//        } else {
+//            let image = UIImage(data: (video?.videoThumbnailDefaultData)!)
+//            cell?.homeVideoImage?.image = image
+//            cell?.activityIndicator.stopAnimating()
+//            cell?.activityIndicator.isHidden = true
+//        }
         
         return cell!
     }

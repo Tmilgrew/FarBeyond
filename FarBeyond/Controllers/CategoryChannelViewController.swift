@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreData
+import SDWebImage
 
 class CategoryChannelViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -81,7 +82,7 @@ class CategoryChannelViewController : UIViewController, UITableViewDelegate, UIT
         if segue.identifier == "pushToVideos"{
             if let controller = segue.destination as? VideoListViewController {
                 controller.channel = channelsFromCategory[(channelTableView.indexPathForSelectedRow! as NSIndexPath).row]
-                controller.dataController = self.dataController
+                //controller.dataController = self.dataController
             }
         }
     }
@@ -142,28 +143,13 @@ extension CategoryChannelViewController {
         cell?.channelDescription?.text = channelsFromCategory[(indexPath as NSIndexPath).row].channelDescription
         cell?.detailTextLabel?.numberOfLines = 2
         
-        if channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailImageData == nil {
+        // TODO: We save all images as channelID
+        // TODO: If  the image file with name \(channelID) doesn't exist, go fetch image and save it to a temporary directory.  Then display the image.
+        // TODO: If the image does exist, display the image.
+        if let imageURLString = channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailURLString  {
+            let imageURL = URL(string: imageURLString)
+            cell?.channelImage?.sd_setImage(with: imageURL, placeholderImage: UIImage(named: "placeholder"))
             
-            DispatchQueue.main.async(){
-                guard let image = try? UIImage(data: Data(contentsOf: URL(string: (self.channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailURLString)!)!)) else {
-                    self.showAlert()
-                    return
-                }
-                
-                self.channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailImageData = UIImagePNGRepresentation(image!)
-                //try? self.dataController.viewContext.save()
-                performUIUpdatesOnMain {
-                    cell?.channelImage?.image = image
-                    cell?.activityIndicator.stopAnimating()
-                    cell?.activityIndicator.isHidden = true
-                    self.channelTableView.reloadData()
-                }
-            }
-        } else {
-            let image = UIImage(data: (channelsFromCategory[(indexPath as NSIndexPath).row].channelThumbnailImageData)! as Data)
-            cell?.channelImage?.image = image
-            cell?.activityIndicator.stopAnimating()
-            cell?.activityIndicator.isHidden = true
         }
         
         if appDelegate.subscribedChannels.contains(channelsFromCategory[(indexPath as NSIndexPath).row]) {

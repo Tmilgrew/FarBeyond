@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreData
+import SDWebImage
 
 
 
@@ -156,7 +157,7 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellResuseId = "ChannelSearchCell"
-        var channel = channels[(indexPath as NSIndexPath).row]
+        let channel = channels[(indexPath as NSIndexPath).row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellResuseId) as? SearchResultsCell
         
         cell?.activityIndicator.startAnimating()
@@ -164,26 +165,11 @@ extension SearchViewController : UITableViewDelegate, UITableViewDataSource {
         cell?.channelTitle?.text = channel.channelTitle
         cell?.channelDescription?.text = channel.channelDescription
         cell?.channelDescription?.numberOfLines = 2
-
-        if channel.channelThumbnailImageData == nil {
-            DispatchQueue.main.async {
-                guard let image = try? UIImage(data: Data(contentsOf: URL(string: channel.channelThumbnailURLString!)!)) else {
-                    self.showAlert()
-                    return
-                }
-                channel.channelThumbnailImageData = UIImagePNGRepresentation(image!)
-
-                performUIUpdatesOnMain {
-                    cell?.channelImage?.image = image
-                    cell?.activityIndicator.stopAnimating()
-                    cell?.activityIndicator.isHidden = true
-                }
-            }
-        } else {
-            let image = UIImage(data: (channel.channelThumbnailImageData)!)
-            cell?.channelImage?.image = image
-            cell?.activityIndicator.stopAnimating()
-            cell?.activityIndicator.isHidden = true
+        
+        if let imageURLString = channel.channelThumbnailURLString  {
+            let imageURL = URL(string: imageURLString)
+            cell?.channelImage?.sd_setImage(with: imageURL, placeholderImage: UIImage(named: "placeholder"))
+            
         }
         
         if appDelegate.subscribedChannels.contains(channels[(indexPath as NSIndexPath).row]) {

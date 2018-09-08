@@ -17,7 +17,7 @@ struct YouTubeChannel:Equatable {
     var subscriptionID : String?
     var channelDescription : String?
     var channelThumbnailURLString : String?
-    var channelThumbnailImageData : Data?
+    //var channelThumbnailImageData : Data?
     var channelToCategory : YouTubeCategory?
     var isSubscribed : String?
     var videosForChannel : [YouTubeVideo]?

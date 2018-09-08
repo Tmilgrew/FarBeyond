@@ -8,6 +8,7 @@ target 'FarBeyond' do
   # Pods for FarBeyond
   pod 'GoogleSignIn'
   pod "youtube-ios-player-helper", "~> 0.1.4"
+  pod 'SDWebImage', '~> 4.0'
 
   target 'FarBeyondTests' do
     inherit! :search_paths

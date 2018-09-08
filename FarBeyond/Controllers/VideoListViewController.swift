@@ -14,7 +14,7 @@ import youtube_ios_player_helper
 class VideoListViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: Properties
-    var dataController: DataController!
+    //var dataController: DataController!
     var channel : YouTubeChannel!
     var appDelegate = UIApplication.shared.delegate as! AppDelegate
     var videos : [YouTubeVideo] = []
@@ -40,12 +40,12 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
     }
     
     // MARK: Helper Methods
-    private func displayVideosFromChannel(_ video: String){
+    private func displayVideosFromChannel(_ channelID: String){
         
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
         
-        YouTubeClient.sharedInstance().getVideosFromChannel(video){(results, error) in
+        YouTubeClient.sharedInstance().getVideosFromChannel(channelID){(results, error) in
             guard error == nil else {
                 self.showAlert()
                 performUIUpdatesOnMain {
@@ -59,28 +59,7 @@ class VideoListViewController : UIViewController, UITableViewDelegate, UITableVi
                 return
             }
             self.channel.videosForChannel = results
-//            for video in results {
-//                //var newVideo = YouTubeVideo()
-//
-////                if let idObject = video[YouTubeClient.JSONBodyResponse.Id] as? [String: AnyObject]{
-////                    newVideo.videoID = idObject[YouTubeClient.JSONBodyResponse.VideoId] as? String
-////                }
-//
-////                if let snippet = video[YouTubeClient.JSONBodyResponse.Snippet] as? [String:AnyObject] {
-////                    newVideo.videoDescription = snippet[YouTubeClient.JSONBodyResponse.Description] as? String
-////                    newVideo.videoTitle = snippet[YouTubeClient.JSONBodyResponse.Title] as? String
-////
-////                    if let thumbnails = snippet[YouTubeClient.JSONBodyResponse.Thumbnails] as? [String: AnyObject] {
-////                        if let defaultURL = thumbnails[YouTubeClient.JSONBodyResponse.Default] as? [String: AnyObject] {
-////                            newVideo.videoThumbnailDefaultURL = defaultURL[YouTubeClient.JSONBodyResponse.URL] as? String
-////                        }
-////                    }
-////                }
-//                newVideo.videoToChannel = self.channel
-//                print("-------The new Video is : \(newVideo)")
-//                self.videos.append(newVideo)
-//                print("--------------in loop video array: \(self.videos)")
-//            }
+
             
             //print("------------------VIdeoArray is: \(self.videos)")
             performUIUpdatesOnMain {
@@ -134,33 +113,10 @@ extension VideoListViewController {
         cell?.videoDescription?.text = videos[(indexPath as NSIndexPath).row].videoDescription
         cell?.detailTextLabel?.numberOfLines = 2
         
-        if videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultData == nil {
+        if let imageURLString = videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultURL  {
+            let imageURL = URL(string: imageURLString)
+            cell?.videoImage?.sd_setImage(with: imageURL, placeholderImage: UIImage(named: "placeholder"))
             
-            DispatchQueue.main.async() {
-                
-                guard let image = try? UIImage(data: Data(contentsOf: URL(string: (self.videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultURL)!)!)) else {
-                    self.showAlert()
-                    return
-                }
-                
-                self.videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultData = UIImagePNGRepresentation(image!)
-                
-                performUIUpdatesOnMain {
-                    cell?.videoImage?.image = image
-                    cell?.videoTitle?.text = self.videos[(indexPath as NSIndexPath).row].videoTitle
-                    cell?.activityIndicator.stopAnimating()
-                    cell?.activityIndicator.isHidden = true
-                    cell?.videoDescription?.text = self.videos[(indexPath as NSIndexPath).row].videoDescription
-                    self.videoTableView.reloadData()
-                }
-            }
-        } else {
-            let image = UIImage(data: (videos[(indexPath as NSIndexPath).row].videoThumbnailDefaultData)! as Data)
-            cell?.videoImage?.image = image
-            cell?.videoTitle?.text = videos[(indexPath as NSIndexPath).row].videoTitle
-            cell?.activityIndicator.stopAnimating()
-            cell?.activityIndicator.isHidden = true
-            cell?.videoDescription?.text = videos[(indexPath as NSIndexPath).row].videoDescription
         }
         
         return cell!

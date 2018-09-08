@@ -14,7 +14,7 @@ struct YouTubeVideo {
     var videoID : String?
     var videoDescription : String?
     var videoThumbnailDefaultURL : String?
-    var videoThumbnailDefaultData : Data?
+    //var videoThumbnailDefaultData : Data?
     var videoToChannel : YouTubeChannel?
     var resultsPerPage : Int?
     var totalResults : Int?
